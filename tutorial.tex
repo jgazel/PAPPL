@@ -1,0 +1,122 @@
+\documentclass[a4paper,11pt]{article}
+ \usepackage[utf8]{inputenc} %latin9 ou1
+ \usepackage[T1]{fontenc}
+ \usepackage[normalem]{ulem}
+ \usepackage[french]{babel}
+ \usepackage{verbatim}
+ \usepackage{graphicx}
+%\usepackage[letterpaper]{geometry}
+%\geometry{verbose,tmargin=3cm,bmargin=3cm,lmargin=3cm}
+%\usepackage{varioref}
+
+%\usepackage{babel}
+\usepackage{fancyhdr}
+\lhead{\itshape Tutoriel CSO}
+\cfoot{Page \thepage}
+\pagestyle{fancy}
+
+\usepackage{listings}   % need for code encapsulation
+\lstset{
+	language=C++,
+	numbers=left, numberstyle=\tiny, stepnumber=1, numbersep=7pt,
+	keywordstyle=\color{blue}\bfseries\emph,
+	breaklines=true,
+	frameround=fttt,
+	basicstyle= \mdseries\scriptsize }
+	
+% Commandes personnelles
+\def\clap#1{\hbox to 0pt{\hss #1\hss}} % Une commande sembleble  \rlap ou \llap, mais centrant son argument
+\def\ligne#1{\hbox to \hsize{\vbox{\centering #1}}} % Une commande centrant son contenu ( utiliser en mode vertical)
+% Une comande qui met son premier argument  gauche, le second au 
+% milieu et le dernier  droite, la premire ligne ce chacune de ces
+% trois boites coincidant
+\def\haut#1#2#3{\hbox to \hsize{\rlap{\vtop{\raggedright #1}}\hss \clap{\vtop{\centering #2}} \hss \llap{\vtop{\raggedleft #3}}}}%
+% Idem, mais cette fois-ci, c'est la dernire ligne
+\def\bas#1#2#3{\hbox to \hsize{\rlap{\vbox{\raggedright #1}} \hss \clap{\vbox{\centering #2}} \hss \llap{\vbox{\raggedleft #3}}}}%
+    
+    
+% La commande \maketitle
+\makeatletter
+	\def\maketitle{%
+	  \thispagestyle{empty}\vbox to \vsize{%
+		\vspace{5mm} \ligne{\Huge \@title}
+		\vspace{1cm} \haut{Supervisé par \@supervisor}{}{\@follower}
+		\vspace{3mm}\hrule
+		\vfill
+		\bas{}{\@location, \@date}{}
+		}%
+	  \cleardoublepage
+	  }
+
+	% Les commandes permettant de dfinir la date, le lieu, etc.
+	\def\date#1{\def\@date{#1}}
+	\def\title#1{\def\@title{#1}}
+	\def\location#1{\def\@location{#1}}
+	\def\blurb#1{\def\@blurb{#1}}
+	\def\supervisor#1{\def\@supervisor{#1}}
+	\def\follower#1{\def\@follower{#1}}
+	\def\email#1{\def\@email{\small{#1}}}
+	% Valeurs par dfaut
+	\date{\today}
+\makeatother
+
+
+  \title{Tutoriel CSO}
+  \email{jerome.gazel@centraliens-nantes.net}
+  \location{Nantes}
+
+  \supervisor{M.\ Olivier Roux}
+  \follower{\'{E}cole Centrale de Nantes}
+
+
+\begin{document}
+\maketitle
+
+\section{Installer CSO}
+
+\begin{enumerate}
+\item 
+  \begin{verbatim} 
+  $ sudo aptitude install scala
+  \end{verbatim}
+\item Créer un répertoire dans lequel vous travaillerez : 
+  \begin{verbatim} 
+  $ mkdir projet-cso
+  \end{verbatim}
+\item Télécharger les fichiers requis (adapter la version si nécessaire)
+  \begin{verbatim} 
+  $ cd projet-cso
+  $ wget http://www.scala-lang.org/downloads/distrib/files/scala-2.8.1.final.tgz
+  $ wget http://users.comlab.ox.ac.uk/bernard.sufrin/CSO/cso-sources-scala2.8.0.tgz
+  \end{verbatim}
+  
+\item Décompresser les archives scala-2.8.1.final.tgz et cso-sources-scala2.8.0.tgz
+  \begin{verbatim} 
+  $ tar -xvf scala-2.8.1.final.tgz
+  $ tar -xvf cso-sources-scala2.8.0.tgz
+  $ rm cso-sources-scala2.8.0.tgz
+  $ rm scala-2.8.1.final.tgz
+  $ mv scala-2.8.1.final Scala
+  \end{verbatim}
+
+\item Créer un répertoire ScalaLocal et déplacez-y le xml suivant
+  \begin{verbatim} 
+  $ mkdir ScalaLocal
+  $ mv scalatasks.xml ScalaLocal/
+  \end{verbatim}
+
+\item Modifier le build pour la compilation
+  \begin{verbatim} 
+  $ gedit build.xml
+  \end{verbatim}
+  Et modifier les lignes 11 et 12 par les \$\{user.home\}/ par \$\{user.home\}/projet-cso/; en prenant en compte le chemin d'accès dans lequel vous avez créé votre fichier.
+  
+\item Compiler via la commande
+  \begin{verbatim} 
+  $ ant jar
+  \end{verbatim}  
+\end{enumerate}
+
+
+\end{document}
+
