@@ -39,6 +39,9 @@
 \makeatletter
 	\def\maketitle{%
 	  \thispagestyle{empty}\vbox to \vsize{%
+	    \vspace{1cm} \haut{Jérôme Gazel}{}{Clément Schiano de Colella}
+	    \vspace{3mm}\hrule
+	    \vfill
 		\vspace{5mm} \ligne{\Huge \@title}
 		\vspace{1cm} \haut{Supervisé par \@supervisor}{}{\@follower}
 		\vspace{3mm}\hrule
@@ -72,13 +75,15 @@
 \begin{document}
 \maketitle
 
-\section{Installer CSO}
+\part{Installer CSO}
+
+\section{CSO - Marche à suivre}
 
 \begin{enumerate}
-\item 
-  \begin{verbatim} 
-  $ sudo aptitude install scala
-  \end{verbatim}
+%\item 
+%  \begin{verbatim} 
+%  $ sudo aptitude install scala
+%  \end{verbatim}
 \item Créer un répertoire dans lequel vous travaillerez : 
   \begin{verbatim} 
   $ mkdir projet-cso
@@ -100,6 +105,12 @@
   $ rm scala-2.8.1.final.tgz
   $ mv scala-2.8.1.final Scala
   \end{verbatim}
+  
+\item Installer la dernière version de Scala  
+  \begin{verbatim}   
+  export SCALA_HOME="/opt/scala" 
+  export PATH="${SCALA_HOME}/bin:${JAVA_HOME}/bin:${PATH}"
+  \end{verbatim}
 
 \item Créer un répertoire ScalaLocal et déplacez-y le xml suivant
   \begin{verbatim} 
@@ -107,16 +118,44 @@
   $ mv scalatasks.xml ScalaLocal/
   \end{verbatim}
 
+\item Deux options s'offrent à vous. Soit il s'agira de modifier le build.xml dans chaque projet; soit vous pouvez créer des liens symboliques à la racine:
+\begin{itemize}
 \item Modifier le build pour la compilation
   \begin{verbatim} 
   $ gedit build.xml
   \end{verbatim}
-  Et modifier les lignes 11 et 12 par les \$\{user.home\}/ par \$\{user.home\}/projet-cso/; en prenant en compte le chemin d'accès dans lequel vous avez créé votre fichier.
+  Et modifier les lignes 11 et 12 par les \$\{user.home\}/  par  \$\{user.home\}/projet-cso/; en prenant en compte le chemin d'accès dans lequel vous avez créé votre fichier.
+\item Créer deux liens symboliques à la racine vers le fichier projet-cso [à adapter selon l'emplacement de celui-ci]:
+  \begin{verbatim} 
+  $ cd
+  $ ln -s projet-cso/Scala Scala
+  $ ln -s projet-cso/ScalaLocal ScalaLocal
+  \end{verbatim}
+\end{itemize}
+
   
 \item Compiler via la commande
   \begin{verbatim} 
   $ ant jar
   \end{verbatim}  
+\end{enumerate}
+
+
+\section{CSwing - Le jeu de la vie}
+Le fichier que nous avons décompressé contient un répertoire CSwing. Celui-ci est une jeu de la vie implémenté en CSO par Bernard~Sufrin.
+
+\subsection{Compilation}
+
+\begin{enumerate}
+\item Placez-vous dans le répertoire CSwing
+  \begin{verbatim} 
+  $ cd CSwing
+  \end{verbatim}
+\item  Celui-ci contient les instructions de compilation dans build.xml
+  \begin{verbatim} 
+  $ ant jar
+  \end{verbatim}
+La compilation doit aboutir par la création d'un fichier BUILD contenu dans CSwing.
 \end{enumerate}
 
 
