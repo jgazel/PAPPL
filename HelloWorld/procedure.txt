@@ -1,3 +1,6 @@
 $ scalac MainClassObject.scala
-$ scala -cp . MainClassObject
-# Ce qui affiche bien "HelloWorld!"
+$ scala -cp jerome.MainClassObject
+// Ce qui affiche bien "HelloWorld!"
+
+// IMPLEMENTATION ANT
+$ ant hello
