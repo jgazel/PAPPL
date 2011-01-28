@@ -1,0 +1,89 @@
+\documentclass[a4paper,11pt]{article}
+ \usepackage[utf8]{inputenc} %latin9 ou1
+ \usepackage[T1]{fontenc}
+ \usepackage[normalem]{ulem}
+ \usepackage[french]{babel}
+ \usepackage{verbatim}
+ \usepackage{graphicx}
+%\usepackage[letterpaper]{geometry}
+%\geometry{verbose,tmargin=3cm,bmargin=3cm,lmargin=3cm}
+%\usepackage{varioref}
+
+%\usepackage{babel}
+\usepackage{fancyhdr}
+\lhead{\itshape Compte-Rendu d'Avancement 2}
+\cfoot{Page \thepage}
+\pagestyle{fancy}
+
+\usepackage{listings}   % need for code encapsulation
+\lstset{
+	language=C++,
+	numbers=left, numberstyle=\tiny, stepnumber=1, numbersep=7pt,
+	keywordstyle=\color{blue}\bfseries\emph,
+	breaklines=true,
+	frameround=fttt,
+	basicstyle= \mdseries\scriptsize }
+	
+% Commandes personnelles
+\def\clap#1{\hbox to 0pt{\hss #1\hss}} % Une commande sembleble  \rlap ou \llap, mais centrant son argument
+\def\ligne#1{\hbox to \hsize{\vbox{\centering #1}}} % Une commande centrant son contenu ( utiliser en mode vertical)
+% Une comande qui met son premier argument  gauche, le second au 
+% milieu et le dernier  droite, la premire ligne ce chacune de ces
+% trois boites coincidant
+\def\haut#1#2#3{\hbox to \hsize{\rlap{\vtop{\raggedright #1}}\hss \clap{\vtop{\centering #2}} \hss \llap{\vtop{\raggedleft #3}}}}%
+% Idem, mais cette fois-ci, c'est la dernire ligne
+\def\bas#1#2#3{\hbox to \hsize{\rlap{\vbox{\raggedright #1}} \hss \clap{\vbox{\centering #2}} \hss \llap{\vbox{\raggedleft #3}}}}%
+    
+    
+% La commande \maketitle
+\makeatletter
+	\def\maketitle{%
+	  \thispagestyle{empty}\vbox to \vsize{%
+		\vspace{5mm} \ligne{\Huge \@title}
+		\vspace{1cm} \haut{Supervisé par \@supervisor}{}{\@follower}
+		\vspace{3mm}\hrule
+		\vfill
+		\bas{}{\@location, \@date}{}
+		}%
+	  \cleardoublepage
+	  }
+
+	% Les commandes permettant de dfinir la date, le lieu, etc.
+	\def\date#1{\def\@date{#1}}
+	\def\title#1{\def\@title{#1}}
+	\def\location#1{\def\@location{#1}}
+	\def\blurb#1{\def\@blurb{#1}}
+	\def\supervisor#1{\def\@supervisor{#1}}
+	\def\follower#1{\def\@follower{#1}}
+	\def\email#1{\def\@email{\small{#1}}}
+	% Valeurs par dfaut
+	\date{\today}
+\makeatother
+
+
+  \title{Compte-Rendu d'Avancement 2}
+  \email{jerome.gazel@centraliens-nantes.net}
+  \location{Nantes}
+
+  \supervisor{M.\ Olivier Roux}
+  \follower{\'{E}cole Centrale de Nantes}
+
+
+\begin{document}
+\maketitle
+
+\section{Répartition des tâches effectuées}
+
+Après une semaine depuis le dernier compte-rendu d'avancement, nous avions quelque difficultés à utiliser CSO : après avoir écrit un tutoriel sur son installation, nous avons essayé de lancer lyfe, un des programmes fournis avec CSO pour comprendre l'implémentation de la programmation concurrente.
+Cependant, nous ne réussissions pas à compiler le programme, puis après avoir résolu ce premier problème, nous n'arrivions pas à executer le programme. Nous avons donc décidé de se répartir les tâches afin de continuer d'avancer dans le projet d'application : Jérôme aura en charge de continuer à étudier CSO et Clément s'occuperait de l'installation de JCSP et de sa prise en main.
+
+\section{\'{E}tude de CSO}
+
+Jérôme a continué la deuxième semaine les recherches sur CSO. Après de nombreuses heures, il a constaté que le tutoriel que nous avions rédigé lors du dernier rapport d'avancement ne convenait pas. Il l'a donc repris puis a enfin réussi à exécuter le programme lyfe. Il a rédigé également un HelloWorld à l'aide de CSO. Pour le prochain rapport d'avancement, Jérôme cherchera à maîtriser encore plus CSO, et commencer à implémenter un des problèmes classiques, conformément au cahier des charges du projet d'application.
+
+\section{\'{E}tude de JCSP}
+
+
+
+\end{document}
+
