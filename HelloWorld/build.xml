@@ -1,0 +1,79 @@
+<?xml version="1.0"?>
+<!--         $Id: build.xml jgazel 2011-01-27 -->
+<project name="Hello_CSO"  default="jar">
+	<property name="base.dir"     value="."                 />
+	<property name="sources.dir"  value="${base.dir}/src"   />
+	<property name="build.dir"    value="${base.dir}/BUILD" />
+	<property name="hello.dir"     value="${base.dir}/HELLO"  />
+	<property name="doc.dir"      value="${base.dir}/doc"   />
+	<property name="scala.home"   value="${user.home}/Scala/" />
+	<property name="scala.local"  value="${user.home}/ScalaLocal" />
+	<!-- additional ant resources for scala -->
+	<property name="local.jars"   value="../../BUILD" />
+	<!-- jars on the compilation class path -->
+	<import file="${scala.local}/scalatasks.xml"/>
+	<path id="compile.classpath">
+		<path refid="scala.compile.classpath"/>
+		<pathelement location="${local.jars}/cso.jar"/>
+	</path>
+	<path id="runtime.classpath">
+		<path refid="scala.runtime.classpath"/>
+		<pathelement location="${local.jars}/cso.jar"/>
+		<pathelement location="${build.dir}/hello_cso.jar"/>
+		<pathelement location="${scala.library.jar}"/>
+	</path>
+	<!-- different targets -->
+	<!-- ***************** -->
+	<!-- target : compile -->
+	<target name="compile" depends="scalatasks" description="Compile the library">
+		<mkdir dir="${build.dir}"/>
+		<scalac srcdir       = "${sources.dir}"            destdir      = "${build.dir}"             deprecation  = "on"                     unchecked    = "on"                     classpathref = "compile.classpath"            force        = "changed">
+			<include name="**/*.scala"/>
+		</scalac>
+	</target>
+    <!-- target : prog -->
+	<target name="prog" depends="scalatasks" description="Compile the sources in src only">
+		<mkdir dir="${build.dir}"/>
+		<scalac srcdir       = "${sources.dir}"            destdir      = "${build.dir}"             deprecation  = "on"                     unchecked    = "on"                     classpathref = "compile.classpath"            force        = "changed">
+			<include name="*.scala"/>
+		</scalac>
+	</target>
+	<!-- target : doc -->
+	<target name="doc" depends="scalatasks" description="Document the library">
+		<mkdir dir="${doc.dir}"/>
+		<scaladoc            srcdir       = "${sources.dir}"            destdir      = "${doc.dir}"                      classpathref = "compile.classpath"            doctitle     = "Communicating Swing"            unchecked    = "on"            >
+			<include name="**/*.scala"/>
+		</scaladoc>
+	</target>
+	<!-- target : distjar -->
+	<target name="distjar" depends="jar,doc" description="Make a jar containing the library and its documentation">
+		<jar destfile = "${base.dir}/hello_cso_doc.jar" basedir="${base.dir}" includes="doc/**/*,src/**/*.scala,BUILD/hello_cso.jar"/>
+	</target>
+	<!-- target : jar -->
+	<target name="jar" depends="compile" description="Make a jar containing the library">
+		<jar destfile = "${build.dir}/hello_cso.jar"               basedir  = "${build.dir}/ox"              includes = "**/*.class"        excludes =  "*test*"/>
+	</target>
+	<!-- target : clean -->
+	<target name="clean" description="Remove build, doc, and build directories">
+		<delete dir="${build.dir}"/>
+		<delete dir="${doc.dir}"/>
+	</target>
+	<!-- target : fresh -->
+	<target name="fresh" description="Build fresh library, doc, etc" depends="clean,jar,doc"/>
+	
+	<!-- target : hello -->
+	<target name       = "hello"          description= "Execute the hello program with compiling"          depends    = "compile"          >
+		<exec executable="bash">
+			<arg line="-c 'scala -cp ${local.jars}/cso.jar:${build.dir} jerome_cso.Hello_CSO'"/>
+		</exec>
+	</target>
+	<!-- target : exe -->
+	<target name       = "exe"          description= "Execute the hello program"       >
+		<exec executable="bash">
+			<arg line="-c 'scala -cp ${local.jars}/cso.jar:${build.dir} jerome_cso.Hello_CSO'"/>
+		</exec>
+	</target>
+	
+	
+
+</project>
