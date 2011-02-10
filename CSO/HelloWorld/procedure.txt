@@ -1,6 +1,8 @@
+// Ancienne procédure
 $ scalac MainClassObject.scala
 $ scala -cp jerome.MainClassObject
 // Ce qui affiche bien "HelloWorld!"
 
+// Nouvelle procédure
 // IMPLEMENTATION ANT
 $ ant hello
