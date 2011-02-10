@@ -27,31 +27,60 @@
 	<!-- target : compile -->
 	<target name="compile" depends="scalatasks" description="Compile the library">
 		<mkdir dir="${build.dir}"/>
-		<scalac srcdir       = "${sources.dir}"            destdir      = "${build.dir}"             deprecation  = "on"                     unchecked    = "on"                     classpathref = "compile.classpath"            force        = "changed">
+		<scalac 
+		    srcdir       = "${sources.dir}"            
+		    destdir      = "${build.dir}"             
+		    deprecation  = "on"                     
+		    unchecked    = "on"                     
+		    classpathref = "compile.classpath"            
+		    force        = "changed"
+		    >
 			<include name="**/*.scala"/>
 		</scalac>
 	</target>
     <!-- target : prog -->
 	<target name="prog" depends="scalatasks" description="Compile the sources in src only">
 		<mkdir dir="${build.dir}"/>
-		<scalac srcdir       = "${sources.dir}"            destdir      = "${build.dir}"             deprecation  = "on"                     unchecked    = "on"                     classpathref = "compile.classpath"            force        = "changed">
+		<scalac 
+		    srcdir       = "${sources.dir}"            
+		    destdir      = "${build.dir}"             
+		    deprecation  = "on"                     
+		    unchecked    = "on"                     
+		    classpathref = "compile.classpath"            
+		    force        = "changed"
+		    >
 			<include name="*.scala"/>
 		</scalac>
 	</target>
 	<!-- target : doc -->
 	<target name="doc" depends="scalatasks" description="Document the library">
 		<mkdir dir="${doc.dir}"/>
-		<scaladoc            srcdir       = "${sources.dir}"            destdir      = "${doc.dir}"                      classpathref = "compile.classpath"            doctitle     = "Communicating Swing"            unchecked    = "on"            >
+		<scaladoc            
+		    srcdir       = "${sources.dir}"            
+		    destdir      = "${doc.dir}"                      
+		    classpathref = "compile.classpath"            
+		    doctitle     = "Communicating Swing"            
+		    unchecked    = "on"            
+		    >
 			<include name="**/*.scala"/>
 		</scaladoc>
 	</target>
 	<!-- target : distjar -->
 	<target name="distjar" depends="jar,doc" description="Make a jar containing the library and its documentation">
-		<jar destfile = "${base.dir}/hello_cso_doc.jar" basedir="${base.dir}" includes="doc/**/*,src/**/*.scala,BUILD/hello_cso.jar"/>
+		<jar 
+		    destfile = "${base.dir}/hello_cso_doc.jar" 
+		    basedir="${base.dir}" 
+		    includes="doc/**/*,src/**/*.scala,BUILD/hello_cso.jar"
+		    />
 	</target>
 	<!-- target : jar -->
 	<target name="jar" depends="compile" description="Make a jar containing the library">
-		<jar destfile = "${build.dir}/hello_cso.jar"               basedir  = "${build.dir}/ox"              includes = "**/*.class"        excludes =  "*test*"/>
+		<jar 
+		    destfile = "${build.dir}/hello_cso.jar"               
+		    basedir  = "${build.dir}/ox"              
+		    includes = "**/*.class"        
+		    excludes =  "*test*"
+		    />
 	</target>
 	<!-- target : clean -->
 	<target name="clean" description="Remove build, doc, and build directories">
