@@ -1,3 +1,7 @@
+#!/bin/bash
+# Script pour installer CSO sur une machine sous GNU/Linux
+# Ecrit par Jérôme GAZEL - Ecole Centrale de Nantes - 2011
+
 wget http://www.scala-lang.org/downloads/distrib/files/scala-2.8.1.final.tgz
 
 tar -xvzf scala-2.8.1.final.tgz
