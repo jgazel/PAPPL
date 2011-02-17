@@ -1,6 +1,6 @@
 <?xml version="1.0"?>
-<!--         $Id: build.xml jgazel 2011-01-27 -->
-<project name="Hello_CSO"  default="jar">
+<!--$Id: build.xml gazel_schiano 2011-12-17 -->
+<project name="ProdCons"  default="jar">
 	<property name="base.dir"     value="."                 />
 	<property name="sources.dir"  value="${base.dir}/src"   />
 	<property name="build.dir"    value="${base.dir}/BUILD" />

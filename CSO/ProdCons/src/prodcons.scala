@@ -5,38 +5,38 @@ object ProdCons {
     val NP = 4
     val NC = 1
     val N = 4
-    val enVie = true
+    var enVie = true
 
-    val left, mon, right = Chan[T]
+    val left, mon, right = OneOne[String]
 
     def main( args: Array[String] ) {
-        (|| ( for (i <- 0 until NP) yield Producteur(i, left) )
-         || ( for (i <- 0 until NC) yield Consommateur(i, right) )
+        (|| (for (i <- 0 until NP) yield Producteur(i, left) )
+         || (for (i <- 0 until NC) yield Consommateur(i, right) )
          || Buffer(mon) 
         )()
     }
 
-    def Producteur(i : int, out : ![T]) : PROC = {
-        val nb = 0
-        val message = ""
+    def Producteur(i : Int, out : ![String]) : PROC = {
+        var nb = 0
+        var message = ""
 
             repeat(enVie) {
                 message = "Objet numéro " + nb
                 out ! message
-                print ("Production " + i + " : " + message + "\n");
+                println("Production " + i + " : " + message)
                 nb = nb + 1
             }
     }
 
-    def Consommateur(i : int, in : ?[T]) : PROC = {
-        val k = 0
+    def Consommateur(i : Int, in : ?[String]) : PROC = {
+        var k = 0
         
             repeat(enVie) {
                 in ? { message => 
                         {
-                            mon ! message ;
-                            right! message ;
-                            println("Consommateur " + i + " : " + message + "\n")
+                            mon ! message 
+                            right! message 
+                            println("Consommateur " + i + " : " + message)
                         } 
                     }
                 //sleep(500*i)
@@ -44,7 +44,8 @@ object ProdCons {
     }  
     
 
-    def  Buffer( tuyau : ?[T] ) : PROC = {
+    def  Buffer( tuyau : ?[String] ) : PROC = {
          tuyau ? { v => {println(v)}}
     }
 }
+
