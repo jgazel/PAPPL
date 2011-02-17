@@ -9,7 +9,7 @@
 	<property name="scala.home"   value="${user.home}/Scala/" />
 	<property name="scala.local"  value="${user.home}/ScalaLocal" />
 	<!-- additional ant resources for scala -->
-	<property name="local.jars"   value="../../BUILD" />
+	<property name="local.jars"   value="${user.home}/ScalaLocal" />
 	<!-- jars on the compilation class path -->
 	<import file="${scala.local}/scalatasks.xml"/>
 	<path id="compile.classpath">
