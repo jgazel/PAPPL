@@ -10,8 +10,8 @@ object ProdCons {
     val left, mon, right = Chan[T]
 
     def main( args: Array[String] ) {
-        (|| ( for (i <- 0 until NP) ) yield Producteur(i, left)
-         || ( for (i <- 0 until NC) ) yield Consommateur(i, right)
+        (|| ( for (i <- 0 until NP) yield Producteur(i, left) )
+         || ( for (i <- 0 until NC) yield Consommateur(i, right) )
          || Buffer(mon) 
         )()
     }
