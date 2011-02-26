@@ -1,0 +1,281 @@
+\documentclass[a4paper,11pt]{article}
+ \usepackage[utf8]{inputenc} %latin9 ou1
+ \usepackage[T1]{fontenc}
+ \usepackage[normalem]{ulem}
+ \usepackage[french]{babel}
+ \usepackage{verbatim}
+ \usepackage{graphicx}
+ \usepackage{multicol}
+%\usepackage[letterpaper]{geometry}
+%\geometry{verbose,tmargin=3cm,bmargin=3cm,lmargin=3cm}
+%\usepackage{varioref}
+
+%\usepackage{babel}
+\usepackage{fancyhdr}
+\cfoot{Page \thepage}
+\pagestyle{fancy}
+
+\usepackage{listings}   % need for code encapsulation
+\lstset{
+	language=Python,
+	numbers=left, numberstyle=\tiny, stepnumber=1, numbersep=7pt,
+	keywordstyle=\bfseries\emph,
+	breaklines=true,
+	frameround=fttt,
+	basicstyle= \mdseries\scriptsize }
+\lstset{language=bash,basicstyle=\scriptsize,commentstyle=\small\itshape,stringstyle=\ttfamily,numbers=left,numberstyle=\tiny,stepnumber=1,showstringspaces=false}
+	
+% Commandes personnelles
+\def\clap#1{\hbox to 0pt{\hss #1\hss}} % Une commande sembleble  \rlap ou \llap, mais centrant son argument
+\def\ligne#1{\hbox to \hsize{\vbox{\centering #1}}} % Une commande centrant son contenu ( utiliser en mode vertical)
+% Une comande qui met son premier argument  gauche, le second au 
+% milieu et le dernier  droite, la premire ligne ce chacune de ces
+% trois boites coincidant
+\def\haut#1#2#3{\hbox to \hsize{\rlap{\vtop{\raggedright #1}}\hss \clap{\vtop{\centering #2}} \hss \llap{\vtop{\raggedleft #3}}}}%
+% Idem, mais cette fois-ci, c'est la dernire ligne
+\def\bas#1#2#3{\hbox to \hsize{\rlap{\vbox{\raggedright #1}} \hss \clap{\vbox{\centering #2}} \hss \llap{\vbox{\raggedleft #3}}}}%
+    
+    
+% La commande \maketitle
+\makeatletter
+	\def\maketitle{%
+	  \thispagestyle{empty}\vbox to \vsize{%
+		\vspace{3cm} \ligne{\Huge \@title}
+		\vspace{1cm} \haut{Supervisé par \@supervisor}{}{\@follower}
+		\vspace{3mm}\hrule
+		\vfill
+		\haut{}{Jérôme \textsc{Gazel}}{}
+		\haut{}{$\&$}{}
+		\haut{}{Clément \textsc{Schiano de Colella}}{}
+		\vspace{3cm}
+		\bas{}{\@location, \@date}{}
+		}%
+	  %\cleardoublepage
+	  }
+
+	% Les commandes permettant de dfinir la date, le lieu, etc.
+	\def\date#1{\def\@date{#1}}
+	\def\title#1{\def\@title{#1}}
+	\def\location#1{\def\@location{#1}}
+	\def\blurb#1{\def\@blurb{#1}}
+	\def\supervisor#1{\def\@supervisor{#1}}
+	\def\follower#1{\def\@follower{#1}}
+	\def\email#1{\def\@email{\small{#1}}}
+	% Valeurs par dfaut
+	\date{\today}
+\makeatother
+
+
+  \title{Compte-Rendu d'Avancement $\no$4}
+  \location{Nantes}
+  \lhead{\itshape RA $\no$4 [25/02/11]}
+  \supervisor{M.\ Olivier \textsc{Roux}}
+  \follower{\'Ecole Centrale de Nantes}
+
+
+\begin{document}
+\maketitle
+
+\part*{Avancées }
+
+\section{Problème sur CSO}
+
+Comme nous l'avions indiqué à notre encadrant M.\ \textsc{Roux}, nous avons éprouvé au cours des dernières semaines de grandes difficultés à appréhender CSO -- Communcating Scala Objects.\\
+
+Après avoir construit un fichier \textsf{buid.xml} capable de compiler, nettoyer, lancer le programme en adjoignant les bonnes ressources via une simple commande, puis avoir saisi la syntaxe nécessaire à la programmation concurrentielle, la programmation des deux schémas-types : producteur-consommateur et lecteur-écrivain, a été commencé.\\
+
+Cependant, après des résultats infructueux, il semblerait que notre équipe ait mis à jour un problème relevant du comportement de CSO vis-à-vis des processus concurrents. En effet, leur ordre d'arrivée dépend de leur position dans la sélective; ce qui ne devrait pas être le cas.\\
+
+\subsection{Illustration du problème}
+
+Pour illustrer ces propos, considérons le programme suivant \textsf{HelloWorld} qui lancent plusieurs procesus en parallèle, chacun ayant soit la tâche d'afficher "Hello" ou "World" :
+\medskip
+
+\begin{lstlisting}[frame=trBL]
+package helloworld
+import ox.CSO._
+
+object Hello_Par {
+
+    val NP = 3
+    val NC = 4
+    
+    def main( args: Array[String] ) {
+  
+        println("Debut du programme HelloWord Par :")
+        ( 
+           || ( for (i <- 0 until NP) yield Hello(i) )
+        || 
+           || ( for (i <- 0 until NC) yield World(i) )
+        )()
+        
+    }
+
+
+    def Hello( i: Int ) : PROC={
+    	say("Hello" + i)
+    } 
+
+    def World( i: Int ) : PROC={
+    	say("World" + i)
+    }
+
+    def say( word: String ) {
+      println(word)
+    }  
+}
+\end{lstlisting}
+
+Les résultats obtenus avec cette syntaxe sont les suivants :
+\medskip
+\begin{multicols}{2}
+
+\begin{lstlisting}[frame=trBL]
+     [exec] Debut :
+     [exec] Hello0
+     [exec] Hello1
+     [exec] World3
+     [exec] World2
+     [exec] World0
+     [exec] World1
+     [exec] Hello2
+     [exec] Debut :
+     [exec] Hello2
+     [exec] Hello1
+     [exec] Hello0
+     [exec] World3
+     [exec] World2
+     [exec] World0
+     [exec] World1
+     [exec] Debut  :
+     [exec] Hello2
+     [exec] Hello0
+     [exec] Hello1
+     [exec] World3
+     [exec] World0
+     [exec] World2
+     [exec] World1
+     [exec] Debut  :
+     [exec] Hello2
+     [exec] Hello0
+     [exec] Hello1
+     [exec] World3
+     [exec] World2
+     [exec] World1
+     [exec] World0
+     [exec] Debut  :
+     [exec] Hello2
+     [exec] Hello1
+     [exec] Hello0
+     [exec] World3
+     [exec] World2
+     [exec] World0
+     [exec] World1
+     [exec] Debut  :
+     [exec] Hello2
+     [exec] Hello1
+     [exec] Hello0
+     [exec] World3
+     [exec] World2
+     [exec] World0
+     [exec] World1
+     [exec] Debut  :
+     [exec] Hello2
+     [exec] Hello0
+     [exec] Hello1
+     [exec] World3
+     [exec] World1
+     [exec] World0
+     [exec] World2
+     [exec] Debut  :
+     [exec] Hello2
+     [exec] Hello0
+     [exec] Hello1
+     [exec] World3
+     [exec] World2
+     [exec] World1
+     [exec] World0
+     [exec] Debut  :
+     [exec] Hello2
+     [exec] World2
+     [exec] Hello1
+     [exec] Hello0
+     [exec] World3
+     [exec] World0
+     [exec] World1
+     [exec] Debut  :
+     [exec] Hello2
+     [exec] Hello0
+     [exec] Hello1
+     [exec] World3
+     [exec] World2
+     [exec] World0
+     [exec] World1
+     [exec] Debut  :
+     [exec] Hello2
+     [exec] Hello1
+     [exec] Hello0
+     [exec] World3
+     [exec] World2
+     [exec] World0
+     [exec] World1
+     [exec] Debut  :
+     [exec] Hello2
+     [exec] Hello1
+     [exec] Hello0
+     [exec] World3
+     [exec] World2
+     [exec] World0
+     [exec] World1
+     [exec] Debut  :
+     [exec] Hello2
+     [exec] Hello0
+     [exec] Hello1
+     [exec] World3
+     [exec] World2
+     [exec] World0
+     [exec] World1
+     [exec] Debut  :
+     [exec] Hello2
+     [exec] World2
+     [exec] World0
+     [exec] World1
+     [exec] World3
+     [exec] Hello0
+     [exec] Hello1
+     [exec] Debut  :
+     [exec] Hello2
+     [exec] Hello1
+     [exec] Hello0
+     [exec] World3
+     [exec] World2
+     [exec] World0
+     [exec] World1
+     [exec] Debut  :
+     [exec] Hello2
+     [exec] Hello0
+     [exec] Hello1
+     [exec] World3
+     [exec] World2
+     [exec] World0
+     [exec] World1
+     [exec] Debut  :
+     [exec] Hello2
+     [exec] Hello1
+     [exec] Hello0
+     [exec] World3
+     [exec] World2
+     [exec] World0
+     [exec] World1
+
+\end{lstlisting}
+\end{multicols}
+
+
+On remarque bien que les processus dépendent de leur place dans la sélective, et leur ordre est même (sauf exceptions) quasiment le même.
+
+\subsection{Bilan}
+
+Malgré ce problème, nous avons rédigé un programme de producteur-consommateur en CSO. Une mauvaise communication entre les différents processus sustistent encore. Nous continuons notre travail en nous penchant à deux sur ces deux sujets.
+\end{document}
+

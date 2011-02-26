@@ -1,0 +1,238 @@
+Buildfile: /home/jerome/Documents/Pappl/git/CSO/HelloWorld/build.xml
+
+exe:
+     [exec] Début du programme HelloWord_Par :
+     [exec] Hello0
+     [exec] Hello1
+     [exec] World3
+     [exec] World2
+     [exec] World0
+     [exec] World1
+     [exec] Hello2
+
+BUILD SUCCESSFUL
+Total time: 1 second
+Buildfile: /home/jerome/Documents/Pappl/git/CSO/HelloWorld/build.xml
+
+exe:
+     [exec] Début du programme HelloWord_Par :
+     [exec] Hello2
+     [exec] Hello1
+     [exec] Hello0
+     [exec] World3
+     [exec] World2
+     [exec] World0
+     [exec] World1
+
+BUILD SUCCESSFUL
+Total time: 1 second
+Buildfile: /home/jerome/Documents/Pappl/git/CSO/HelloWorld/build.xml
+
+exe:
+     [exec] Début du programme HelloWord_Par :
+     [exec] Hello2
+     [exec] Hello0
+     [exec] Hello1
+     [exec] World3
+     [exec] World0
+     [exec] World2
+     [exec] World1
+
+BUILD SUCCESSFUL
+Total time: 1 second
+Buildfile: /home/jerome/Documents/Pappl/git/CSO/HelloWorld/build.xml
+
+exe:
+     [exec] Début du programme HelloWord_Par :
+     [exec] Hello2
+     [exec] Hello0
+     [exec] Hello1
+     [exec] World3
+     [exec] World2
+     [exec] World1
+     [exec] World0
+
+BUILD SUCCESSFUL
+Total time: 1 second
+Buildfile: /home/jerome/Documents/Pappl/git/CSO/HelloWorld/build.xml
+
+exe:
+     [exec] Début du programme HelloWord_Par :
+     [exec] Hello2
+     [exec] Hello1
+     [exec] Hello0
+     [exec] World3
+     [exec] World2
+     [exec] World0
+     [exec] World1
+
+BUILD SUCCESSFUL
+Total time: 1 second
+Buildfile: /home/jerome/Documents/Pappl/git/CSO/HelloWorld/build.xml
+
+exe:
+     [exec] Début du programme HelloWord_Par :
+     [exec] Hello2
+     [exec] Hello1
+     [exec] Hello0
+     [exec] World3
+     [exec] World2
+     [exec] World0
+     [exec] World1
+
+BUILD SUCCESSFUL
+Total time: 1 second
+Buildfile: /home/jerome/Documents/Pappl/git/CSO/HelloWorld/build.xml
+
+exe:
+     [exec] Début du programme HelloWord_Par :
+     [exec] Hello2
+     [exec] Hello0
+     [exec] Hello1
+     [exec] World3
+     [exec] World1
+     [exec] World0
+     [exec] World2
+
+BUILD SUCCESSFUL
+Total time: 1 second
+Buildfile: /home/jerome/Documents/Pappl/git/CSO/HelloWorld/build.xml
+
+exe:
+     [exec] Début du programme HelloWord_Par :
+     [exec] Hello2
+     [exec] Hello0
+     [exec] Hello1
+     [exec] World3
+     [exec] World2
+     [exec] World1
+     [exec] World0
+
+BUILD SUCCESSFUL
+Total time: 1 second
+Buildfile: /home/jerome/Documents/Pappl/git/CSO/HelloWorld/build.xml
+
+exe:
+     [exec] Début du programme HelloWord_Par :
+     [exec] Hello2
+     [exec] World2
+     [exec] Hello1
+     [exec] Hello0
+     [exec] World3
+     [exec] World0
+     [exec] World1
+
+BUILD SUCCESSFUL
+Total time: 1 second
+Buildfile: /home/jerome/Documents/Pappl/git/CSO/HelloWorld/build.xml
+
+exe:
+     [exec] Début du programme HelloWord_Par :
+     [exec] Hello2
+     [exec] Hello0
+     [exec] Hello1
+     [exec] World3
+     [exec] World2
+     [exec] World0
+     [exec] World1
+
+BUILD SUCCESSFUL
+Total time: 1 second
+Buildfile: /home/jerome/Documents/Pappl/git/CSO/HelloWorld/build.xml
+
+exe:
+     [exec] Début du programme HelloWord_Par :
+     [exec] Hello2
+     [exec] Hello1
+     [exec] Hello0
+     [exec] World3
+     [exec] World2
+     [exec] World0
+     [exec] World1
+
+BUILD SUCCESSFUL
+Total time: 1 second
+Buildfile: /home/jerome/Documents/Pappl/git/CSO/HelloWorld/build.xml
+
+exe:
+     [exec] Début du programme HelloWord_Par :
+     [exec] Hello2
+     [exec] Hello1
+     [exec] Hello0
+     [exec] World3
+     [exec] World2
+     [exec] World0
+     [exec] World1
+
+BUILD SUCCESSFUL
+Total time: 1 second
+Buildfile: /home/jerome/Documents/Pappl/git/CSO/HelloWorld/build.xml
+
+exe:
+     [exec] Début du programme HelloWord_Par :
+     [exec] Hello2
+     [exec] Hello0
+     [exec] Hello1
+     [exec] World3
+     [exec] World2
+     [exec] World0
+     [exec] World1
+
+BUILD SUCCESSFUL
+Total time: 1 second
+Buildfile: /home/jerome/Documents/Pappl/git/CSO/HelloWorld/build.xml
+
+exe:
+     [exec] Début du programme HelloWord_Par :
+     [exec] Hello2
+     [exec] World2
+     [exec] World0
+     [exec] World1
+     [exec] World3
+     [exec] Hello0
+     [exec] Hello1
+
+BUILD SUCCESSFUL
+Total time: 1 second
+Buildfile: /home/jerome/Documents/Pappl/git/CSO/HelloWorld/build.xml
+
+exe:
+     [exec] Début du programme HelloWord_Par :
+     [exec] Hello2
+     [exec] Hello1
+     [exec] Hello0
+     [exec] World3
+     [exec] World2
+     [exec] World0
+     [exec] World1
+
+BUILD SUCCESSFUL
+Total time: 1 second
+Buildfile: /home/jerome/Documents/Pappl/git/CSO/HelloWorld/build.xml
+
+exe:
+     [exec] Début du programme HelloWord_Par :
+     [exec] Hello2
+     [exec] Hello0
+     [exec] Hello1
+     [exec] World3
+     [exec] World2
+     [exec] World0
+     [exec] World1
+
+BUILD SUCCESSFUL
+Total time: 1 second
+Buildfile: /home/jerome/Documents/Pappl/git/CSO/HelloWorld/build.xml
+
+exe:
+     [exec] Début du programme HelloWord_Par :
+     [exec] Hello2
+     [exec] Hello1
+     [exec] Hello0
+     [exec] World3
+     [exec] World2
+     [exec] World0
+     [exec] World1
+
+BUILD SUCCESSFUL
+Total time: 1 second
