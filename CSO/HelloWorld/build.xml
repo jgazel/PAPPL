@@ -91,15 +91,27 @@
 	<target name="fresh" description="Build fresh library, doc, etc" depends="clean,jar,doc"/>
 	
 	<!-- target : hello -->
-	<target name       = "hello"          description= "Execute the hello program with compiling"          depends    = "compile"          >
+	<target name       = "hello"          description= "Execute the hello program without compiling">
 		<exec executable="bash">
 			<arg line="-c 'scala -cp ${local.jars}/cso.jar:${build.dir} jerome_cso.Hello_CSO'"/>
+		</exec>
+	</target>
+	<!-- target : par -->
+	<target name       = "par"          description= "Execute the hello_par program with compiling">
+		<exec executable="bash">
+			<arg line="-c 'scala -cp ${local.jars}/cso.jar:${build.dir} helloworld.Hello_Par'"/>
+		</exec>
+	</target>
+	<!-- target : pipe -->
+	<target name       = "pipe"          description= "Execute the hello_Pipe program without compiling">
+		<exec executable="bash">
+			<arg line="-c 'scala -cp ${local.jars}/cso.jar:${build.dir} helloworld.Hello_Pipe'"/>
 		</exec>
 	</target>
 	<!-- target : exe -->
 	<target name       = "exe"          description= "Execute the hello program"       >
 		<exec executable="bash">
-			<arg line="-c 'scala -cp ${local.jars}/cso.jar:${build.dir} jerome_cso.Hello_CSO'"/>
+			<arg line="-c 'scala -cp ${local.jars}/cso.jar:${build.dir} helloworld.Hello_Par'"/>
 		</exec>
 	</target>
 	
