@@ -97,7 +97,7 @@
 		</exec>
 	</target>
 	<!-- target : par -->
-	<target name       = "par"          description= "Execute the hello_par program with compiling">
+	<target name       = "par"          description= "Execute the hello_par program without compiling">
 		<exec executable="bash">
 			<arg line="-c 'scala -cp ${local.jars}/cso.jar:${build.dir} helloworld.Hello_Par'"/>
 		</exec>
@@ -108,10 +108,16 @@
 			<arg line="-c 'scala -cp ${local.jars}/cso.jar:${build.dir} helloworld.Hello_Pipe'"/>
 		</exec>
 	</target>
+  <!-- target : final -->
+	<target name       = "final"          description= "Execute the final program without compiling">
+		<exec executable="bash">
+			<arg line="-c 'scala -cp ${local.jars}/cso.jar:${build.dir} helloworld.Final'"/>
+		</exec>
+	</target>
 	<!-- target : exe -->
 	<target name       = "exe"          description= "Execute the hello program"       >
 		<exec executable="bash">
-			<arg line="-c 'scala -cp ${local.jars}/cso.jar:${build.dir} helloworld.Hello_Par'"/>
+			<arg line="-c 'scala -cp ${local.jars}/cso.jar:${build.dir} helloworld.Final'"/>
 		</exec>
 	</target>
 	

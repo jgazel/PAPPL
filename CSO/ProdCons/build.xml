@@ -90,7 +90,7 @@
 	<target name="fresh" description="Build fresh library, doc, etc" depends="clean,jar,doc"/>
 	
 	<!-- target : pc -->
-	<target name       = "pc"          description= "Execute the ProdCons program with compiling"          depends    = "compile"          >
+	<target name       = "pc"          description= "Execute the ProdCons program without compiling"       >
 		<exec executable="bash">
 			<arg line="-c 'scala -cp ${local.jars}/cso.jar:${build.dir} gazel_schiano_cso.ProdCons'"/>
 		</exec>
