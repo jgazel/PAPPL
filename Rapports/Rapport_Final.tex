@@ -1,0 +1,489 @@
+\documentclass[a4paper,11pt,french]{report}
+ \usepackage[utf8]{inputenc} %latin9 ou1
+ \usepackage[T1]{fontenc}
+ \usepackage[normalem]{ulem}
+ \usepackage[letterpaper]{geometry}
+ \usepackage{lmodern} %fonte latin modern
+ \usepackage[francais]{babel}
+ \usepackage{verbatim}
+ \usepackage{graphicx}
+ \usepackage{multicol}
+ \usepackage{hyperref}
+ \hypersetup{colorlinks=true,linkcolor=blue,urlcolor=red}
+ \usepackage{varioref}
+%\usepackage[letterpaper]{geometry}
+%\geometry{verbose,tmargin=3cm,bmargin=3cm,lmargin=3cm}
+%\usepackage{varioref}
+
+%\usepackage{babel}
+\usepackage{fancyhdr}
+\cfoot{Page \thepage}
+\pagestyle{fancy}
+
+\usepackage{listings}   % need for code encapsulation
+\lstset{
+	language=Python,
+	numbers=left, numberstyle=\tiny, stepnumber=1, numbersep=7pt,
+	keywordstyle=\bfseries\emph,
+	breaklines=true,
+	frameround=fttt,
+	basicstyle= \mdseries\scriptsize }
+\lstset{language=bash,basicstyle=\scriptsize,commentstyle=\small\itshape,stringstyle=\ttfamily,numbers=left,numberstyle=\tiny,stepnumber=1,showstringspaces=false}
+	
+% Commandes personnelles
+\def\clap#1{\hbox to 0pt{\hss #1\hss}} % Une commande sembleble  \rlap ou \llap, mais centrant son argument
+\def\ligne#1{\hbox to \hsize{\vbox{\centering #1}}} % Une commande centrant son contenu ( utiliser en mode vertical)
+% Une comande qui met son premier argument  gauche, le second au 
+% milieu et le dernier  droite, la premire ligne ce chacune de ces
+% trois boites coincidant
+\def\haut#1#2#3{\hbox to \hsize{\rlap{\vtop{\raggedright #1}}\hss \clap{\vtop{\centering #2}} \hss \llap{\vtop{\raggedleft #3}}}}%
+% Idem, mais cette fois-ci, c'est la dernire ligne
+\def\bas#1#2#3{\hbox to \hsize{\rlap{\vbox{\raggedright #1}} \hss \clap{\vbox{\centering #2}} \hss \llap{\vbox{\raggedleft #3}}}}%
+    
+    
+% La commande \maketitle
+\makeatletter
+	\def\maketitle{%
+	  \thispagestyle{empty}\vbox to \vsize{%
+		\vspace{3cm} \ligne{\Huge \textsc \@title}
+		\vspace{7mm} \ligne{\Large \@subtitle}
+		\vspace{1cm} \haut{Supervisé par \@supervisor}{}{\@follower}
+		\vspace{3mm}\hrule
+		\vfill
+		\haut{}{Jérôme \textsc{Gazel}}{}
+		\haut{}{$\&$}{}
+		\haut{}{Clément \textsc{Schiano de Colella}}{}
+		\vspace{3cm}
+		\bas{}{\@location, \@date}{}
+		}%
+	  %\cleardoublepage
+	  }
+
+	% Les commandes permettant de dfinir la date, le lieu, etc.
+	\def\date#1{\def\@date{#1}}
+	\def\title#1{\def\@title{#1}}
+	\def\subtitle#1{\def\@subtitle{#1}}
+	\def\location#1{\def\@location{#1}}
+	\def\blurb#1{\def\@blurb{#1}}
+	\def\supervisor#1{\def\@supervisor{#1}}
+	\def\follower#1{\def\@follower{#1}}
+	\def\email#1{\def\@email{\small{#1}}}
+	% Valeurs par dfaut
+	\date{\today}
+\makeatother
+
+
+  \title{Programmation Concurrentielle}
+  \subtitle{Communicating Scala Objects\\Java Communicating Sequential Processes}
+  \location{Nantes}
+  \lhead{\itshape PAPPLE - 2011}
+  \supervisor{M.\ Olivier \textsc{Roux}}
+  \follower{\'Ecole Centrale de Nantes}
+
+
+\begin{document}
+\maketitle
+\tableofcontents
+
+
+\part{Implémentation des différents langages}
+\chapter[CSO]{Communicating Scala Objects -- CSO}
+
+\section{Problème sur CSO}
+
+Sous la supervision de notre encadrant M.\ \textsc{Roux}, nous nous sommes penchés ces dernières semaines sur CSO -- Communcating Scala Objects. Ce language est une extension de Scala, et permet d'implémenter tout algorithme de programmation concurrentielle.\\
+
+Après avoir construit un fichier \textsf{buid.xml} capable de compiler, nettoyer, lancer le programme en adjoignant les bonnes ressources via une simple commande, puis avoir saisi la syntaxe nécessaire d'abord à Scala, puis à CSO, les programmes 'producteur-consommateur' et 'lecteur-écrivain'étaient l'un des objectifs de notre projet.\\
+
+Cependant, après des résultats infructueux, il semblerait que notre équipe ait mis à jour un problème relevant du comportement de CSO vis-à-vis des processus concurrents. En effet, leur ordre d'arrivée dépend de leur position dans la sélective; ce qui ne devrait pas être le cas.\\ 
+
+En d'autres termes, les processus ne s'executent que si l'un d'entre eux se finit (à la manière séquentielle d'un \textsc{Fifo}). Voici quelques exemples qui nous ont amenés à cette conclusion.
+
+\subsection{Illustration du problème}
+
+Pour illustrer ces propos, considérons le programme suivant \textsf{HelloWorld} qui lancent plusieurs procesus en parallèle, chacun ayant soit la tâche d'afficher "Hello" soit d'afficher "World".\\
+La syntaxe-clef ici est la double-barre ||, qui permet de décrire une sélective, mais donne aussi la possiblité via l'opérateur \textsf{for} de lancer \textit{n} processus en parallèle.\\
+Cette syntaxe est notamment décrite dans le rapport émis par Dr.\ \textsc{Suffrin}, ainsi que dans le programme Lyfe qu'il met à disposition sur son site internet.
+\medskip
+
+\begin{lstlisting}[frame=trBL]
+package helloworld
+import ox.CSO._
+
+object Hello_Par {
+
+    val NP = 3
+    val NC = 4
+    
+    def main( args: Array[String] ) {
+  
+        println("Debut du programme HelloWord Par :")
+        ( 
+           || ( for (i <- 0 until NP) yield Hello(i) )
+        || 
+           || ( for (i <- 0 until NC) yield World(i) )
+        )()
+        
+    }
+
+
+    def Hello( i: Int ) : PROC={
+    	say("Hello" + i)
+    } 
+
+    def World( i: Int ) : PROC={
+    	say("World" + i)
+    }
+
+    def say( word: String ) {
+      println(word)
+    }  
+}
+\end{lstlisting}
+
+Les résultats obtenus avec cette syntaxe sont présentés dans la figure~\vref{fig:1HW}.
+
+\begin{figure}[h]
+\centering
+\begin{multicols}{2}
+\begin{lstlisting}[frame=trBL]
+     [exec] Debut :
+     [exec] Hello0
+     [exec] Hello1
+     [exec] World3
+     [exec] World2
+     [exec] World0
+     [exec] World1
+     [exec] Hello2
+     [exec] Debut :
+     [exec] Hello2
+     [exec] Hello1
+     [exec] Hello0
+     [exec] World3
+     [exec] World2
+     [exec] World0
+     [exec] World1
+     [exec] Debut  :
+     [exec] Hello2
+     [exec] Hello0
+     [exec] Hello1
+     [exec] World3
+     [exec] World0
+     [exec] World2
+     [exec] World1
+     [exec] Debut  :
+     [exec] Hello2
+     [exec] Hello0
+     [exec] Hello1
+     [exec] World3
+     [exec] World2
+     [exec] World1
+     [exec] World0
+     [exec] Debut  :
+     [exec] Hello2
+     [exec] Hello1
+     [exec] Hello0
+     [exec] World3
+     [exec] World2
+     [exec] World0
+     [exec] World1
+     [exec] Debut  :
+     [exec] Hello2
+     [exec] Hello1
+     [exec] Hello0
+     [exec] World3
+     [exec] World2
+     [exec] World0
+     [exec] World1
+     [exec] Debut  :
+     [exec] Hello2
+     [exec] Hello0
+     [exec] Hello1
+     [exec] World3
+     [exec] World1
+     [exec] World0
+     [exec] World2
+     [exec] Debut  :
+     [exec] Hello2
+     [exec] Hello0
+     [exec] Hello1
+     [exec] World3
+     [exec] World2
+     [exec] World1
+     [exec] World0
+     [exec] Debut  :
+     [exec] Hello2
+     [exec] World2
+     [exec] Hello1
+     [exec] Hello0
+     [exec] World3
+     [exec] World0
+     [exec] World1
+     [exec] Debut  :
+     [exec] Hello2
+     [exec] Hello0
+     [exec] Hello1
+     [exec] World3
+     [exec] World2
+     [exec] World0
+     [exec] World1
+     [exec] Debut  :
+     [exec] Hello2
+     [exec] Hello1
+     [exec] Hello0
+     [exec] World3
+     [exec] World2
+     [exec] World0
+     [exec] World1
+     [exec] Debut  :
+     [exec] Hello2
+     [exec] Hello1
+     [exec] Hello0
+     [exec] World3
+     [exec] World2
+     [exec] World0
+     [exec] World1
+     [exec] Debut  :
+     [exec] Hello2
+     [exec] Hello0
+     [exec] Hello1
+     [exec] World3
+     [exec] World2
+     [exec] World0
+     [exec] World1
+\end{lstlisting}
+\end{multicols}
+\caption{Résultat du premier HelloWorld -- programmation concurrente}
+\label{fig:1HW}
+\end{figure}
+
+On remarque bien que les processus dépendent de leur place dans la sélective, et leur ordre est même (sauf exceptions) quasiment le même.
+
+\subsection{Pour aller plus loin}
+
+Ce problème peut certes paraître minime. L'essentiel est bien sûr que l'ensemble des processus se comporte comme s'il tournait en parallèle.\\ Ici tout porte à croire que c'est cependant le cas. Mais un autre exemple démontre la séquencialité de l'exécution (\emph{cf.} Fig~\vref{fig:contreexemple})
+
+\begin{figure}[h]
+\begin{lstlisting}[frame=trBL]
+package gazel_schiano_cso
+import ox.CSO._
+
+object ProdCons {
+    val NP = 4
+    val NC = 1
+    val N = 4
+    var enVie = true
+
+    val left, mon, right = ManyMany[String]
+
+    def main( args: Array[String] ) {
+        
+        println("Debut du programme Producteur-Consommateur")
+        ( 
+           || ( for (i <- 0 until NP) yield Producteur(i, mon) )
+        || 
+           || ( for (i <- 0 until NC) yield Consommateur(i, mon) )
+        || 
+           Buffer(mon) 
+        )()
+    }
+
+    def Producteur(i : Int, out : ![String]) : PROC = {
+        var nb = 0
+        var message = ""
+        println("Creation d'un producteur (" + i + ").")
+        
+        //repeat(enVie) {
+            println("   Boucle Producteur -- Objet numero " + nb)
+            sleep(i)
+            message = "Objet numero " + nb
+            println(message)
+            mon ! message
+            out ! message
+            println("Production " + i + " : " + message)
+            nb = nb + 1
+        //}
+    }
+
+    def Consommateur(i : Int, in : ?[String]) : PROC = {
+        var k = 0
+        println("Creation d'un consommateur (" + i + ") :: enVie? " + enVie)
+        
+        //repeat(enVie) {
+            println("   Boucle Consommateur")
+            in ? { message => 
+                    {
+                        mon ! message 
+                        right! message 
+                        println("Consommateur " + i + " : " + message)
+                    } 
+                }
+            //sleep(500*i)
+        //}
+    }  
+    
+
+    def  Buffer( tuyau : ?[String] ) : PROC = {
+        println("Entree Buffer")
+        tuyau ? { v => {println(v)}}
+    }
+    
+}
+\end{lstlisting}
+\caption{Contre-exemple démontrant la séquentialité de l'exécution}
+\label{fig:contreexemple}
+\end{figure}
+
+Ce qui donne ici à l'execution l'encadré \vref{fig:contreexemple-resultat}, qui se fige lors de l'attente de l'objet via le pipe.
+
+\begin{figure}[h]
+\begin{lstlisting}[frame=trBL]
+     [exec] Debut du programme Producteur-Consommateur
+     [exec] Creation d'un producteur (0).
+     [exec]    Boucle Producteur -- Objet numero 0
+     [exec] Objet numero 0
+     [exec] Production 0 : Objet numero 0
+     [exec] Creation d'un producteur (1).
+     [exec]    Boucle Producteur -- Objet numero 0
+     [exec] Objet numero 0
+     [exec] Production 1 : Objet numero 0
+     [exec] Creation d'un producteur (2).
+     [exec]    Boucle Producteur -- Objet numero 0
+     [exec] Objet numero 0
+     [exec] Production 2 : Objet numero 0
+     [exec] Creation d'un producteur (3).
+     [exec]    Boucle Producteur -- Objet numero 0
+     [exec] Objet numero 0
+     [exec] Production 3 : Objet numero 0
+     [exec] Creation d'un consommateur (0) :: enVie? true
+     [exec]    Boucle Consommateur
+\end{lstlisting}
+\caption{Contre-exemple démontrant la séquentialité de l'exécution [Résultats]}
+\label{fig:contreexemple-resultat}
+\end{figure}
+
+\bigskip
+
+On remarque bien que l'encha\^inement de l'instanciation se fait de manière séquentielle; d'abord en commençant par les porducteurs, puis par le conosmmateur.\\
+\textbf{Que se passe-t-il ?}\\
+Il est clair que l'instanciation se fait de manière séquentielle, et que le Buffer \textit{mon} n'exite pas encore. De ce fait, l'essai de l'envoi via le pipe vers \textit{mon} ne peut pas aboutir, et on aboutir à un interblocage...
+
+\section{Résolution du problème}
+
+Nous l'avons vu, le problème se situe au niveau de l'instanciation. nosu sommes passés à c\^oté d'un point important dans le langage Scala: la différenciation entre les \textsf{object} et les \textsf{class}.\\
+
+Essayons d'écrire un classe, et de définir à l'intérieur une méthode \textsf{proc}:
+
+\begin{lstlisting}[frame=trBL]
+package helloworld
+import ox.CSO._
+import ox.Format._
+import ox.cso.Components.{console}
+
+object Hello_Pipe {
+
+    var enVie = true
+
+    val pipe = ManyMany[String]
+
+    def main( args: Array[String] ) {
+        println("Debut du programme Hello_Pipe")
+        var sender = new Sender(pipe)
+        var receiver = new Receiver(pipe)
+        ( 
+           sender.process
+        || 
+           receiver.process
+        )()
+    }
+
+    class Sender(out: ![String])
+    {
+        val process : PROC =
+        { 
+            println("Creation d'un sender")
+            repeat 
+            {
+                var message = "Mon Objet"
+                println(">> Envoi de \"" + message + "\"...")
+                out!message
+                sleep(500)
+            }
+        }  
+    }
+
+    class Receiver(in: ?[String])
+    {
+        val process : PROC =
+        { 
+            println("Creation d'un receiver")
+            var message =""
+            repeat 
+            {
+                message=in ?; 
+                println("\"" + message + "\" recu.")
+            }
+         }  
+    }   
+}
+\end{lstlisting}
+\bigskip
+
+Ce problème s'apparente à un algorithme de producteur-consommateur, car la production crée le message, tandis que la consommation l'affiche, tout cela via un pipe.\\
+Le résultat obtenu est le suivant:
+
+
+\begin{lstlisting}[frame=trBL]
+Buildfile: /home/jerome/Documents/Pappl/git/CSO/HelloWorld/build.xml
+
+pipe:
+     [exec] Debut du programme Hello_Pipe
+     [exec] Creation d'un sender
+     [exec] Creation d'un receiver
+     [exec] Envoi de "Mon Objet"... >>
+     [exec] <<Mon Objet recu
+     [exec] Envoi de "Mon Objet"... >>
+     [exec] <<Mon Objet recu
+     [exec] Envoi de "Mon Objet"... >>
+     [exec] <<Mon Objet recu
+     [exec] Envoi de "Mon Objet"... >>
+     [exec] <<Mon Objet recu
+     [exec] Envoi de "Mon Objet"... >>
+     [exec] <<Mon Objet recu
+     [exec] Envoi de "Mon Objet"... >>
+     [exec] <<Mon Objet recu
+     [exec] Envoi de "Mon Objet"... >>
+     [exec] <<Mon Objet recu
+     [exec] Envoi de "Mon Objet"... >>
+     [exec] <<Mon Objet recu
+     [exec] Envoi de "Mon Objet"... >>
+     [exec] <<Mon Objet recu
+     [exec] Envoi de "Mon Objet"... >>
+     [exec] <<Mon Objet recu
+     [exec] Envoi de "Mon Objet"... >>
+     [exec] <<Mon Objet recu
+     [exec] Envoi de "Mon Objet"... >>
+     [exec] <<Mon Objet recu
+\end{lstlisting}
+
+\bigskip
+
+On remarque alors que tout marche!
+L'envoi d'un message par le \textsf{Sender} se traduit par une immédiate impression du message par le \textsf{Receiver}.\\
+
+\textbf{Que s'est-il passé ?}\\
+L'astuce se situe dans le \textsf{main}. Le fait d'avoir des classes nous permet une instanciation préléminaire sans lancer l'objet.\\
+La sélective lançant le processus s'execute alors bien en parallèle.\\
+
+\section{Algorithmes classiques}
+\section{Producteur-Consommateur}
+
+L'objet de cette section est de présenter l'implémentation de l'algorithme classique de producteur-consommateur en CSO.\\
+Pour la communication des différents processus, nous utiliserons d'abord un seul canal (\textsf{val pipe = ManyMany[String]})
+
+\begin{lstlisting}[frame=trBL]
+
+\end{lstlisting}
+
+\end{document}
+
