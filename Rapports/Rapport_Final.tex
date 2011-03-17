@@ -103,7 +103,7 @@ En d'autres termes, les processus ne s'executent que si l'un d'entre eux se fini
 
 Pour illustrer ces propos, considérons le programme suivant \textsf{HelloWorld} qui lancent plusieurs procesus en parallèle, chacun ayant soit la tâche d'afficher "Hello" soit d'afficher "World".\\
 La syntaxe-clef ici est la double-barre ||, qui permet de décrire une sélective, mais donne aussi la possiblité via l'opérateur \textsf{for} de lancer \textit{n} processus en parallèle.\\
-Cette syntaxe est notamment décrite dans le rapport émis par Dr.\ \textsc{Suffrin}, ainsi que dans le programme Lyfe qu'il met à disposition sur son site internet.
+Cette syntaxe est notamment décrite dans le rapport émis par Dr.\ \textsc{Suffrin}\footnote{Page personnelle de Bernard \textsc{Suffrin} à l'adresse \url{http://users.comlab.ox.ac.uk/bernard.sufrin/}} \cite{cpa2008-cso}, ainsi que dans le programme Lyfe qu'il met à disposition sur son site internet.
 \medskip
 
 \begin{lstlisting}[frame=trBL]
@@ -253,7 +253,7 @@ Les résultats obtenus avec cette syntaxe sont présentés dans la figure~\vref{
      [exec] World1
 \end{lstlisting}
 \end{multicols}
-\caption{Résultat du premier HelloWorld -- programmation concurrente}
+\caption{Résultat du premier HelloWorld en programmation concurrente}
 \label{fig:1HW}
 \end{figure}
 
@@ -261,10 +261,10 @@ On remarque bien que les processus dépendent de leur place dans la sélective, 
 
 \subsection{Pour aller plus loin}
 
-Ce problème peut certes paraître minime. L'essentiel est bien sûr que l'ensemble des processus se comporte comme s'il tournait en parallèle.\\ Ici tout porte à croire que c'est cependant le cas. Mais un autre exemple démontre la séquencialité de l'exécution (\emph{cf.} Fig~\vref{fig:contreexemple})
+Ce problème peut certes paraître minime. L'essentiel est bien sûr que l'ensemble des processus se comporte comme s'il tournait en parallèle.\\ Ici tout porte à croire que c'est cependant le cas. Mais un autre exemple démontre la séquencialité de l'exécution (\emph{cf.} l'encadré \vref{fig:contreexemple})
 
-\begin{figure}[h]
-\begin{lstlisting}[frame=trBL]
+\begin{figure}[p]
+\begin{lstlisting}[frame=trBL, title={Contre-exemple démontrant la séquentialité de l'exécution}]
 package gazel_schiano_cso
 import ox.CSO._
 
@@ -330,7 +330,7 @@ object ProdCons {
     
 }
 \end{lstlisting}
-\caption{Contre-exemple démontrant la séquentialité de l'exécution}
+\caption{}
 \label{fig:contreexemple}
 \end{figure}
 
@@ -362,15 +362,14 @@ Ce qui donne ici à l'execution l'encadré \vref{fig:contreexemple-resultat}, qu
 \label{fig:contreexemple-resultat}
 \end{figure}
 
-\bigskip
+\paragraph{Constats} L'encha\^inement de l'instanciation se fait de manière séquentielle; d'abord en commençant par les porducteurs, puis par le consommateur.
 
-On remarque bien que l'encha\^inement de l'instanciation se fait de manière séquentielle; d'abord en commençant par les porducteurs, puis par le conosmmateur.\\
-\textbf{Que se passe-t-il ?}\\
-Il est clair que l'instanciation se fait de manière séquentielle, et que le Buffer \textit{mon} n'exite pas encore. De ce fait, l'essai de l'envoi via le pipe vers \textit{mon} ne peut pas aboutir, et on aboutir à un interblocage...
+\paragraph{Que se passe-t-il ?} Il est clair que l'instanciation se fait de manière séquentielle, et que le Buffer \textit{mon} n'exite pas encore. De ce fait, l'essai de l'envoi via le pipe vers \textit{mon} ne peut pas aboutir, et on aboutir à un interblocage...
 
 \section{Résolution du problème}
+\subsection{Instanciation}
 
-Nous l'avons vu, le problème se situe au niveau de l'instanciation. nosu sommes passés à c\^oté d'un point important dans le langage Scala: la différenciation entre les \textsf{object} et les \textsf{class}.\\
+Nous l'avons vu, le problème se situe au niveau de l'instanciation. Nous sommes passés à c\^oté d'un point important dans le langage Scala: la différenciation entre les \textsf{object} et les \textsf{class}.\\
 
 Essayons d'écrire un classe, et de définir à l'intérieur une méthode \textsf{proc}:
 
@@ -384,7 +383,7 @@ object Hello_Pipe {
 
     var enVie = true
 
-    val pipe = ManyMany[String]
+    val pipe = OneOne[String]
 
     def main( args: Array[String] ) {
         println("Debut du programme Hello_Pipe")
@@ -468,22 +467,125 @@ pipe:
 
 \bigskip
 
-On remarque alors que tout marche!
-L'envoi d'un message par le \textsf{Sender} se traduit par une immédiate impression du message par le \textsf{Receiver}.\\
+\textbf{Constats} L'envoi d'un message par le \textsf{Sender} se traduit par une immédiate impression du message par le \textsf{Receiver}. Le programme tourne comme prévu.
 
-\textbf{Que s'est-il passé ?}\\
-L'astuce se situe dans le \textsf{main}. Le fait d'avoir des classes nous permet une instanciation préléminaire sans lancer l'objet.\\
-La sélective lançant le processus s'execute alors bien en parallèle.\\
+\paragraph{Que s'est-il passé ?} L'astuce se situe dans le \textsf{main}. Le fait d'avoir des classes nous permet une instanciation préléminaire sans lancer l'objet.\\
+La sélective lançant le processus semble alors bien s'exécuter en parallèle.\\
+
+\subsection{Un dernier effort}
+Certes le programme précédent nous donne un résultat satisfaisant; mais il reste le problème du nombre. En effet, nous n'avons considérés ici qu'un couple de sender-receiver, relié par un seul pipe.\\
+Nous avons ommis de parler en outre des différents pipes mis à disposition par le langage CSO, et de leur utilisation dans les multiples situations.
+
+\subsubsection{Les différents pipes}
+Nous pouvons lire dans le rapport du Docteur~\textsc{Suffrin} \cite{cpa2008-cso}, page 4 :
+\begin{itemize}
+\renewcommand{\labelitemi}{$\diamond$}
+\item OneOne[T] -- Un seul et unique process peut accéder à la fois au port de sortie et d'entrée.
+\item ManyOne[T] -- Un seul et unique process peut accéder au port d'entrée. Les process qui souhaitent accéder à sa sortie en ont la possibilité dans un ordre aléatoire.
+\item OneMany[T] -- Un seul et unique process peut accéder au port de sortie. Les process qui souhaitent accéder à son entrée en ont la possibilité dans un ordre aléatoire.
+\item ManyMany[T] -- Autant de process peuvent accéder à la fois au port de sortie et d'entrée. L'écriture et la lecture se font dans un ordre aléatoire.
+\end{itemize}
 
 \section{Algorithmes classiques}
-\section{Producteur-Consommateur}
+\subsection{Producteur-Consommateur}
 
-L'objet de cette section est de présenter l'implémentation de l'algorithme classique de producteur-consommateur en CSO.\\
-Pour la communication des différents processus, nous utiliserons d'abord un seul canal (\textsf{val pipe = ManyMany[String]})
+L'objet de cette sous-section est de présenter l'implémentation de l'algorithme classique de producteur-consommateur en CSO.\\
+Pour la communication des différents processus, nous utiliserons deux de canaux (\textsf{val left,right = ManyMany[String]}) qui permettront de faire le lien entre les producteurs et le buffer d'une part, puis le buffer et les consommateurs d'autre part.
 
-\begin{lstlisting}[frame=trBL]
+\begin{lstlisting}[frame=trBL,title={Producteurs-Consommateurs avec un buffer}]
+package gazel_schiano_cso
+import ox.CSO._
 
+object ProdCons {
+    val NP = 4
+    val NC = 1
+    
+    val left,right = ManyMany[String]
+
+    def main( args: Array[String] ) {
+        
+        println("Debut du programme Producteur-Consommateur (" + NP + "," + NC + ").")
+        
+        // Instanciation
+        val prods =  for (i <- 0 until NP) yield new Producteur(i, left)
+        val cons = for (i <- 0 until NC) yield new Consommateur(i, right)
+        val tampon = new Buffer(left,right)
+        
+        // Lancement en parallele des processus
+        ( 
+           || ( for (i <- 0 until NP) yield prods(i).produire )
+        || 
+           || ( for (i <- 0 until NC) yield cons(i).consommer )
+        || 
+           tampon.process 
+        )()
+    }
+    
 \end{lstlisting}
+
+\begin{lstlisting}[frame=trBL,title={Producteurs-Consommateurs : Producteur}, firstnumber=last]
+    class Producteur(i: Int, out: ![String]) {
+        def produire : PROC = {
+            var nb = 0
+            var message = ""
+            println("Creation d'un producteur (" + i + ").")
+            
+            repeat 
+            {
+                sleep(500)
+                message = "Objet numero " + nb
+                out ! message
+                println("Production " + i + " : " + message + "...>>")
+                nb = nb + 1
+            }
+        }
+    }
+    
+\end{lstlisting}
+
+\begin{lstlisting}[frame=trBL,title={Producteurs-Consommateurs: Consommateur}, firstnumber=last]
+    class Consommateur(i: Int, in: ?[String]) {
+        def consommer : PROC = {
+            println("Creation d'un consommateur (" + i + ").")
+            var message =""
+            repeat
+            {
+                sleep(500)
+                var message =""
+                repeat 
+                    {
+                    message=in ?; 
+                    println("<<Consommation " + i + " : " + message)
+                }
+             }
+        }
+    } 
+     
+\end{lstlisting}
+
+\begin{lstlisting}[frame=trBL,title={Producteurs-Consommateurs : Buffer}, firstnumber=last]    
+    class Buffer( in: ?[String], out: ![String]) {
+        def process : PROC = {
+            println("Entree Buffer")
+            var message =""
+            repeat 
+            {
+                message=in ?; 
+                out!message
+            }
+        }
+    }
+\end{lstlisting} 
+
+
+
+
+\begin{thebibliography}{Cpa2008}
+\bibitem[Cpa2008]{cpa2008-cso} {\textit{Communicating Process Architectures 2008}, Susan Stepney, Fiona Polack, Alistair McEwan, Peter Welch, and Wilson Ifill (Eds.), IOS Press, 2008
+\copyright 2008 The authors and IOS Press. All rights reserved.\\
+\url{http://citeseerx.ist.psu.edu/viewdoc/download?doi=10.1.1.164.8856&rep=rep1&type=pdf}}
+\end{thebibliography}
+
 
 \end{document}
 
