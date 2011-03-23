@@ -100,6 +100,11 @@
 \maketitle
 \tableofcontents
 
+\part{Introduction}
+
+L'importance de la programmation concurrente n'a cessé de croître depuis quelques années. Sa connaissance et sa maîtrise deviendra à terme une nécessité pour tous les développeurs au regard du besoin de parallélisation des tâches. Pour mettre en place, la programmation concurrente, il existe déjà CSP. Imaginé par Hoare, cet algèbre de processus permet de modéliser les différentes interactions entre systèmes. Ce langage a connu plusieurs implémentations pour les principaux langages de programmation et notamment pour Java et Scala.
+Notre travail a donc consisté à prendre en main ces bibliotèques, voire le langage pour Scala, puisque nous  connaissions peu ce langage avant ce projet.
+Nous exposerons donc leur mise en place. Les principales caractéristiques de ces implémentations seront décrites, puis nous exposerons les programmes classiques de la programmation concurrente décrits à l'aide de ces implémentations. Enfin, nous dresserons un bilan de notre travail.
 
 \part{Implémentation des différents langages}
 \chapter[CSO]{Communicating Scala Objects -- CSO}
@@ -661,7 +666,7 @@ Le résultat obtenu est conforme à celui attendu :
      [exec] <<Consommation 0 : Objet numero 5
 \end{lstlisting} 
 
-\chapter[Tutoriel JCSP]{Tutoriel -- JCSP}
+\chapter[JCSP]{Java Communicating Sequential Processes -- JCSP}
 
 JCSP est une implémentation de CSP pour le langage de programmation JAVA. Il fait partie des solutions les plus populaires du fait de sa simplicité et de la communauté active de développement et de forums. Développé à l'université de Kent par Peter Welch et Paul Austin, il dispose de plus d'une documentation détaillée.
 
@@ -972,6 +977,10 @@ class Philosopher implements CSProcess {
 }
 \end{lstlisting}
 
+\chapter{Conclusion}
+
+Ce projet d'application nous a permis de prendre en main différentes technologies que nous n'avions pas obligatoirement vues en cours : CSO, Scala, JCSP. De plus, nous avons pu mettre en pratique, les différents éléments vus en cours de Parallélisme et Systèmes Répartis et de les approfondir. En bilan, nous avons étudié les différents mécanismes en jeu pour la programmation concurrente pour les langages Scala et Java. Nous avons programmé les principaux problèmes classiques dans ces bibliotèques. De surcroît, nous fournissons des tutoriels permettant de faciliter leur utilisation. L'objectif étant de les utiliser pour les promotions suivantes à la manière de CTJ actuellement.
+
 \appendix
 \chapter{ Tour d'horizon de CSO }
 \label{chap:cso}
@@ -1081,9 +1090,20 @@ in ? { message => { println( message + "recu.") }  }
 
 \chapter[Tutoriel JCSP]{Tutoriel -- JCSP}
 
-JCSP est une implémentation de CSP pour le langage de programmation JAVA. Il fait partie des solutions les plus populaires du fait de sa simplicité et de la communauté active de développement et de forums. Développé par l'université de Kent, il dispose de plus d'une documentation détaillée.
-Nous allons montrer 
+Voici un tutoriel concernant l'utilisation de JCSP. Tout d'abord, le lecteur doit installer JCSP. Pour cela, il a à disposition le script bash $install_jcsp.sh$. Pour l'exécuter, il suffit de taper dans un terminal :
 
+\begin{lstlisting}[frame=trBL]
+bash install_jcsp.sh
+\end{lstlisting}
+
+Ce script télécharge les fichiers nécessaires et crée un dossier dans le répertoire personnel nommé JCSP. \`A présent pour utiliser les programmes  fournis un makefile a été crée. Il spécifie les chemins absolus des fichiers jar nécessaires à la compilation du programme. Le lecteur prendra soin à modifier le chemin en fonction du nom de son répertoire. Puis il exécutera successivement :
+
+\begin{lstlisting}[frame=trBL]
+make compile
+make run
+\end{lstlisting}
+
+Les programmes sont alors exécutés. Le fichier principal est par défaut appelé Main.java. Cependant, le lecteur est libre de modifier ce choix. Il suffit de modifier la ligne correspondante dans le makefile.
 
 \begin{thebibliography}{Cpa2008}
 \bibitem[Cpa2008]{cpa2008-cso} {\textit{Communicating Process Architectures 2008}, Susan Stepney, Fiona Polack, Alistair McEwan, Peter Welch, and Wilson Ifill (Eds.), IOS Press, 2008
