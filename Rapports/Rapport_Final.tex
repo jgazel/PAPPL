@@ -80,7 +80,6 @@
   \supervisor{M.\ Olivier \textsc{Roux}}
   \follower{\'Ecole Centrale de Nantes}
 
-
 \begin{document}
 \maketitle
 \tableofcontents
@@ -261,9 +260,8 @@ On remarque bien que les processus dépendent de leur place dans la sélective, 
 
 \subsection{Pour aller plus loin}
 
-Ce problème peut certes paraître minime. L'essentiel est bien sûr que l'ensemble des processus se comporte comme s'il tournait en parallèle.\\ Ici tout porte à croire que c'est cependant le cas. Mais un autre exemple démontre la séquencialité de l'exécution (\emph{cf.} l'encadré \vref{fig:contreexemple})
+Ce problème peut certes paraître minime. L'essentiel est bien sûr que l'ensemble des processus se comporte comme s'il tournait en parallèle.\\ Ici tout porte à croire que c'est cependant le cas. Mais un autre exemple démontre la séquencialité de l'exécution (\emph{cf.} l'encadré suivant)
 
-\begin{figure}[p]
 \begin{lstlisting}[frame=trBL, title={Contre-exemple démontrant la séquentialité de l'exécution}]
 package gazel_schiano_cso
 import ox.CSO._
@@ -287,7 +285,9 @@ object ProdCons {
            Buffer(mon) 
         )()
     }
-
+\end{lstlisting}
+\begin{lstlisting}[frame=trBL, title={Contre-exemple, suite : Producteur}, firstnumber=last]    
+    
     def Producteur(i : Int, out : ![String]) : PROC = {
         var nb = 0
         var message = ""
@@ -304,7 +304,8 @@ object ProdCons {
             nb = nb + 1
         //}
     }
-
+\end{lstlisting}
+\begin{lstlisting}[frame=trBL, title={Contre-exemple, suite : Consommateur et Buffer}, firstnumber=last]
     def Consommateur(i : Int, in : ?[String]) : PROC = {
         var k = 0
         println("Creation d'un consommateur (" + i + ") :: enVie? " + enVie)
@@ -330,9 +331,6 @@ object ProdCons {
     
 }
 \end{lstlisting}
-\caption{}
-\label{fig:contreexemple}
-\end{figure}
 
 Ce qui donne ici à l'execution l'encadré \vref{fig:contreexemple-resultat}, qui se fige lors de l'attente de l'objet via le pipe.
 
@@ -469,6 +467,15 @@ pipe:
 
 \textbf{Constats} L'envoi d'un message par le \textsf{Sender} se traduit par une immédiate impression du message par le \textsf{Receiver}. Le programme tourne comme prévu.
 
+\paragraph{Remarque} Nous pouvons introduire ici la notion de rendez-vous avec la classe Receiver; en effet, il est possible de sustituer aux deux lignes contenues dans le \textsf{repeat\{\}} la ligne suivante
+\begin{center}
+\begin{verbatim}
+in ? { message => { println("<<Reception : " + message) }  }
+\end{verbatim}
+\end{center}
+où la récpetion d'un message dans le pipe exécutera la fonction contenue entre crochets
+
+
 \paragraph{Que s'est-il passé ?} L'astuce se situe dans le \textsf{main}. Le fait d'avoir des classes nous permet une instanciation préléminaire sans lancer l'objet.\\
 La sélective lançant le processus semble alors bien s'exécuter en parallèle.\\
 
@@ -480,10 +487,10 @@ Nous avons ommis de parler en outre des différents pipes mis à disposition par
 Nous pouvons lire dans le rapport du Docteur~\textsc{Suffrin} \cite{cpa2008-cso}, page 4 :
 \begin{itemize}
 \renewcommand{\labelitemi}{$\diamond$}
-\item OneOne[T] -- Un seul et unique process peut accéder à la fois au port de sortie et d'entrée.
-\item ManyOne[T] -- Un seul et unique process peut accéder au port d'entrée. Les process qui souhaitent accéder à sa sortie en ont la possibilité dans un ordre aléatoire.
-\item OneMany[T] -- Un seul et unique process peut accéder au port de sortie. Les process qui souhaitent accéder à son entrée en ont la possibilité dans un ordre aléatoire.
-\item ManyMany[T] -- Autant de process peuvent accéder à la fois au port de sortie et d'entrée. L'écriture et la lecture se font dans un ordre aléatoire.
+\item \textsf{OneOne[T]} -- Un seul et unique process peut accéder à la fois au port de sortie et d'entrée.
+\item \textsf{ManyOne[T]} -- Un seul et unique process peut accéder au port d'entrée. Les process qui souhaitent accéder à sa sortie en ont la possibilité dans un ordre aléatoire.
+\item \textsf{OneMany[T]} -- Un seul et unique process peut accéder au port de sortie. Les process qui souhaitent accéder à son entrée en ont la possibilité dans un ordre aléatoire.
+\item \textsf{ManyMany[T]} -- Autant de process peuvent accéder à la fois au port de sortie et d'entrée. L'écriture et la lecture se font dans un ordre aléatoire.
 \end{itemize}
 
 \section{Algorithmes classiques}
@@ -492,7 +499,7 @@ Nous pouvons lire dans le rapport du Docteur~\textsc{Suffrin} \cite{cpa2008-cso}
 L'objet de cette sous-section est de présenter l'implémentation de l'algorithme classique de producteur-consommateur en CSO.\\
 Pour la communication des différents processus, nous utiliserons deux de canaux (\textsf{val left,right = ManyMany[String]}) qui permettront de faire le lien entre les producteurs et le buffer d'une part, puis le buffer et les consommateurs d'autre part.
 
-\begin{lstlisting}[frame=trBL,title={Producteurs-Consommateurs avec un buffer}]
+\begin{lstlisting}[frame=trBL,title={Producteurs-Consommateurs avec un buffer : En-tête}]
 package gazel_schiano_cso
 import ox.CSO._
 
@@ -577,15 +584,143 @@ object ProdCons {
     }
 \end{lstlisting} 
 
+L'implémentation de cet algorithme est réalisé d'une manière assez simple, avec seulement un pipe vers le buffer qui redirige vers n'importe quel consommateur.\\
+Le résultat obtenu est conforme à celui attendu :
 
+\begin{lstlisting}[frame=trBL,title={Producteurs-Consommateurs : Résultat de l'éxécution}, firstnumber=last]   
+     [exec] Debut du programme Producteur-Consommateur (4,1).
+     [exec] Creation d'un producteur (0).
+     [exec] Creation d'un producteur (1).
+     [exec] Creation d'un producteur (2).
+     [exec] Creation d'un producteur (3).
+     [exec] Creation d'un consommateur (0).
+     [exec] Entree Buffer
+     [exec] Production 3 : Objet numero 0...>>
+     [exec] <<Consommation 0 : Objet numero 0
+     [exec] <<Consommation 0 : Objet numero 0
+     [exec] <<Consommation 0 : Objet numero 0
+     [exec] Production 0 : Objet numero 0...>>
+     [exec] <<Consommation 0 : Objet numero 0
+     [exec] Production 1 : Objet numero 0...>>
+     [exec] Production 2 : Objet numero 0...>>
+     [exec] Production 3 : Objet numero 1...>>
+     [exec] <<Consommation 0 : Objet numero 1
+     [exec] Production 0 : Objet numero 1...>>
+     [exec] Production 1 : Objet numero 1...>>
+     [exec] <<Consommation 0 : Objet numero 1
+     [exec] <<Consommation 0 : Objet numero 1
+     [exec] Production 2 : Objet numero 1...>>
+     [exec] <<Consommation 0 : Objet numero 1
+     [exec] <<Consommation 0 : Objet numero 2
+     [exec] Production 3 : Objet numero 2...>>
+     [exec] Production 0 : Objet numero 2...>>
+     [exec] Production 1 : Objet numero 2...>>
+     [exec] <<Consommation 0 : Objet numero 2
+     [exec] <<Consommation 0 : Objet numero 2
+     [exec] <<Consommation 0 : Objet numero 2
+     [exec] Production 2 : Objet numero 2...>>
+     [exec] Production 3 : Objet numero 3...>>
+     [exec] <<Consommation 0 : Objet numero 3
+     [exec] Production 0 : Objet numero 3...>>
+     [exec] Production 1 : Objet numero 3...>>
+     [exec] <<Consommation 0 : Objet numero 3
+     [exec] <<Consommation 0 : Objet numero 3
+     [exec] Production 2 : Objet numero 3...>>
+     [exec] <<Consommation 0 : Objet numero 3
+     [exec] <<Consommation 0 : Objet numero 4
+     [exec] Production 3 : Objet numero 4...>>
+     [exec] <<Consommation 0 : Objet numero 4
+     [exec] Production 1 : Objet numero 4...>>
+     [exec] <<Consommation 0 : Objet numero 4
+     [exec] Production 0 : Objet numero 4...>>
+     [exec] Production 2 : Objet numero 4...>>
+     [exec] <<Consommation 0 : Objet numero 4
+     [exec] Production 3 : Objet numero 5...>>
+     [exec] <<Consommation 0 : Objet numero 5
+     [exec] Production 1 : Objet numero 5...>>
+     [exec] <<Consommation 0 : Objet numero 5
+     [exec] Production 0 : Objet numero 5...>>
+     [exec] <<Consommation 0 : Objet numero 5
+     [exec] Production 2 : Objet numero 5...>>
+     [exec] <<Consommation 0 : Objet numero 5
+\end{lstlisting} 
 
+\appendix
+\chapter{ Tour d'horizon de CSO }
+\label{chap:cso}
+\section{Généralités sur Scala}
+\begin{description}
+\item[Déclaration de variable] La déclaration d'un champ se présente comme suit:
+\begin{verbatim}
+[visibilité] (var|val) nom [:Type] [= Valeur]
+\end{verbatim}
+\item[Déclaration de classes] Les classes se manipulent avec beaucoup plus de flexibilité que les autres langages de programmation orienté objet, comme le Java. Par exemple, la déclaration d'un enfant par son nom et le nombre de billes qu'il possède s'écrira :
+\begin{lstlisting}[frame=trBL]
+class Enfant {
+  var nom : String = _
+  private var billes = _ 
+} 
+\end{lstlisting}
+On remarque ici que le caractère $\_$ permet d'assigner la valeur adaptée au type du champ : 0 pour les \textsf{Int}, "" pour les \textsf{String}, etc.\\
+L'accès aux arguments de la classe se font simplement par 
+\begin{lstlisting}[frame=trBL]
+object MonExemple {
+  def main(args : Array[String]) :{
+    val toto = new Enfant
+    tot.nom="Toto"
+    println(toto.nom)
+    toto.billes = toto.billes + 5
+  }
+} 
+\end{lstlisting}
+
+Scala alloue un espace mémoire pour un champ, et génère un getter et un setter qui seront automatiquement invoqués lors de la lecture et écriture des instances. Plus de temps perdu comme en Java, Scala s'occupe de tout.
+
+\item[Quelques mots-clefs] Effectuons un tour d'horizon des mots-clefs indispensables à la compréhension des programmes Scala:
+
+\begin{itemize}
+\item[\textsf{object}] En scala, on manipule non seulement des instances des classes, mais aussi d'une manière plus générale des objets. Définir un objet via le mot-clef \textsf{object}, c'est tracer les contours d'une entité que l'on pourra utiliser d'une manière extensible. Nous avons aperçu son utilisation dans l'exemple ci-dessus.\\
+\item[\textsf{class}] Utilisation similaire à celle des langages objets. On manipule uniquement des instances de classes.\\
+
+\item[\textsf{var}] définit une variable en tant que telle, c'est-à-dire qui pourra changer au fil du programme \textit{i.e.} dont la valeur est modifiable. Pour ajouter par exemple un élément au setter du nombre de billes de l'enfant (\emph{cf.} ci-dessus) :
+\begin{lstlisting}[frame=trBL]
+class Enfant(var name : String, private var b: Int) {
+def billes:String = b + " billes"
+def billes_=(b: Int) { if (b<0) error("Nombre de billes negatif") else this.b = b}
+}
+\end{lstlisting}
+On a ici d'abord rajouter \textsf{private} à la déclaration de \textsf{billes} dans le constructeur (en le renommant par la même occasion en \textsf{b}), et définit deux méthodes (via le mot-clef \textsf{def}) :
+
+\begin{itemize}
+\item billes : qui retourne en \textsf{String} le nombre de billes du champ privé en lui rajoutant la cha\^ine \textsf{" billes"}.
+\item billes\_ : qui est bien un identificateur valide en Scala et qui teste la positivité du nombre de billes; de telle sorte que \textsf{toto.billes = -5} lève une erreur comme prévu.\\
+\end{itemize}
+
+\item[\textsf{val}] définit une constante; toute modification lèvera une exception.\\
+
+\item[\textsf{def}] permet de définir méthodes, variables, et bien plus encore. Par exemple \textsf{def pp = \{ v => println(v)\} } définit une fonction qui affiche l'argument d'entrée dans la console.
+\end{itemize}
+\end{description}
+
+\section{Communcating Scala Objects}
+\begin{description}
+\item[Processus] Un processus en CSO est une extension du PROC de Scala qui permet de lancer un thread. D'après le document de Dr.\ \textsc{Suffrin} \cite{cpa2008-cso}, on a:
+\begin{center}
+\begin{tabular}{lp{0.6\textwidth}}
+\textsc{PROC} \{ \emph{expr}\} & Un simple processus (\emph{expr} doit être une commande, c'st-à-dire du type \textsf{Unit})\\ 
+\emph{$p_{1}$} || \emph{$p_{2}$} || ... || \emph{$p_{n}$}  & Composition parallèle de \emph{n} processus (chaque \emph{$p_{i}$} doivent être du type \textsc{PROC})\\
+|| \emph{collection} & Composition parallèle pour une collection finie de différents \textsc{PROC}. \\ 
+\end{tabular} 
+\end{center}
+Une écriture récurrente dans nos programmes est \textsf{||(for ( i <-0 until n) yield $p_{i}$ )}, et permet de lancer un nombre fini de processus en parallèle. Elle est équivalente à \textsf{ $p_{0}$ ||  $p_{1}$ ||  $p_{n-1}$ }.
+Pour lancer un \textsc{PROC}, il suffit d'ajouter deux parenthèses après \textsf{$p_i()$}
+\end{description}
 
 \begin{thebibliography}{Cpa2008}
 \bibitem[Cpa2008]{cpa2008-cso} {\textit{Communicating Process Architectures 2008}, Susan Stepney, Fiona Polack, Alistair McEwan, Peter Welch, and Wilson Ifill (Eds.), IOS Press, 2008
 \copyright 2008 The authors and IOS Press. All rights reserved.\\
 \url{http://citeseerx.ist.psu.edu/viewdoc/download?doi=10.1.1.164.8856&rep=rep1&type=pdf}}
 \end{thebibliography}
-
 
 \end{document}
 

@@ -43,8 +43,9 @@ object Hello_Pipe {
             var message =""
             repeat 
             {
-                message=in ?; 
-                println("\"" + message + "\" reçu.")
+                in ? { message => { println("<<Reception : " + message) }  }
+                //message=in ?; 
+                //println("\"" + message + "\" reçu.")
             }
          }  
     }   
