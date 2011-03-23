@@ -657,20 +657,20 @@ Le résultat obtenu est conforme à celui attendu :
 \item[Déclaration de classes] Les classes se manipulent avec beaucoup plus de flexibilité que les autres langages de programmation orienté objet, comme le Java. Par exemple, la déclaration d'un enfant par son nom et le nombre de billes qu'il possède s'écrira :
 \begin{lstlisting}[frame=trBL]
 class Enfant {
-  var nom : String = _
-  private var billes = _ 
+	var nom : String = _
+	private var billes = _ 
 } 
 \end{lstlisting}
 On remarque ici que le caractère $\_$ permet d'assigner la valeur adaptée au type du champ : 0 pour les \textsf{Int}, "" pour les \textsf{String}, etc.\\
 L'accès aux arguments de la classe se font simplement par 
 \begin{lstlisting}[frame=trBL]
 object MonExemple {
-  def main(args : Array[String]) :{
-    val toto = new Enfant
-    tot.nom="Toto"
-    println(toto.nom)
-    toto.billes = toto.billes + 5
-  }
+	def main(args : Array[String]) :{
+		val toto = new Enfant
+		tot.nom="Toto"
+		println(toto.nom)
+		toto.billes = toto.billes + 5
+	}
 } 
 \end{lstlisting}
 
@@ -685,8 +685,8 @@ Scala alloue un espace mémoire pour un champ, et génère un getter et un sette
 \item[\textsf{var}] définit une variable en tant que telle, c'est-à-dire qui pourra changer au fil du programme \textit{i.e.} dont la valeur est modifiable. Pour ajouter par exemple un élément au setter du nombre de billes de l'enfant (\emph{cf.} ci-dessus) :
 \begin{lstlisting}[frame=trBL]
 class Enfant(var name : String, private var b: Int) {
-def billes:String = b + " billes"
-def billes_=(b: Int) { if (b<0) error("Nombre de billes negatif") else this.b = b}
+	def billes:String = b + " billes"
+	def billes_=(b: Int) { if (b<0) error("Nombre de billes negatif") else this.b = b}
 }
 \end{lstlisting}
 On a ici d'abord rajouter \textsf{private} à la déclaration de \textsf{billes} dans le constructeur (en le renommant par la même occasion en \textsf{b}), et définit deux méthodes (via le mot-clef \textsf{def}) :
@@ -714,7 +714,43 @@ On a ici d'abord rajouter \textsf{private} à la déclaration de \textsf{billes}
 \end{center}
 Une écriture récurrente dans nos programmes est \textsf{||(for ( i <-0 until n) yield $p_{i}$ )}, et permet de lancer un nombre fini de processus en parallèle. Elle est équivalente à \textsf{ $p_{0}$ ||  $p_{1}$ ||  $p_{n-1}$ }.
 Pour lancer un \textsc{PROC}, il suffit d'ajouter deux parenthèses après \textsf{$p_i()$}
+
+\begin{lstlisting}[frame=trBL]
+( 
+  proc { val i = 0 ; repeat { println("tic " + i) ; i = i + 1 } }
+|| 
+  proc { repeat { println(println("tac " + i) ; i = i + 1) } }
+)()
+\end{lstlisting}
+
+\item[Channel] Les \textsf{channels}, tels des pipes, synchronisent la terminaison de l'instruction \textsf{!} à la sortie du port, avec la terminaison de l'instruction \textsf{?} correspondante à son entrée :
+
+\begin{center}
+\begin{tabular}{lp{0.6\textwidth}}
+\textsf{OneOne[T]} & Un seul et unique process peut accéder à la fois au port de sortie et d'entrée.\\
+
+\textsf{ManyOne[T]} & Un seul et unique process peut accéder au port d'entrée. Les process qui souhaitent accéder à sa sortie en ont la possibilité dans un ordre aléatoire.\\
+
+\textsf{OneMany[T]} & Un seul et unique process peut accéder au port de sortie. Les process qui souhaitent accéder à son entrée en ont la possibilité dans un ordre aléatoire.\\
+
+\textsf{ManyMany[T]} & Autant de process peuvent accéder à la fois au port de sortie et d'entrée. L'écriture et la lecture se font dans un ordre aléatoire.\\
+\end{tabular}
+\end{center}
+
+\item[Rendez-vous] Pour une plus grande documentation, se reporter au rapport du Docteur~\textsc{Suffrin} \cite{cpa2008-cso}.\\ 
+Pour récupérer la valeur d'un \textsf{channel}, on utilise la syntaxe suivante :
+\begin{verbatim}
+var message=in ?; 
+println("\"" + message + "\" recu.")
+\end{verbatim}
+
+Une notation simplifiée est :
+\begin{verbatim}
+in ? { message => { println( message + "recu.") }  }
+\end{verbatim}             
+
 \end{description}
+
 
 \begin{thebibliography}{Cpa2008}
 \bibitem[Cpa2008]{cpa2008-cso} {\textit{Communicating Process Architectures 2008}, Susan Stepney, Fiona Polack, Alistair McEwan, Peter Welch, and Wilson Ifill (Eds.), IOS Press, 2008
