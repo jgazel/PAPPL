@@ -22,13 +22,29 @@
 
 \usepackage{listings}   % need for code encapsulation
 \lstset{
-	language=PHP,
+	language=Python,
 	numbers=left, numberstyle=\tiny, stepnumber=1, numbersep=7pt,
+	morekeywords={%
+    %%% BOUCLE, TEST & Co.
+      if, elif, then, else, and, or, until, yield,repeat,
+    %%% IMPORT & Co.
+      import, from, package,
+    %%% FONCTIONS NUMERIQUES
+      cos, sin, tan, acos, asin, atan,
+    %%% CONSTANTES
+      pi, True, False,
+    %%% Types .
+      Int, String, Array, Integer, 
+    %%% Mots-Clefs supp.
+      object, class, protected, public, private, final, val, var, new
+    },
+    sensitive=true,
+    morecomment=[l]{\#},
 	keywordstyle=\bfseries\emph,
-	breaklines=true,
+	breaklines=true,	
 	frameround=fttt,
 	basicstyle= \mdseries\scriptsize }
-\lstset{language=bash,basicstyle=\scriptsize,commentstyle=\small\itshape,stringstyle=\ttfamily,numbers=left,numberstyle=\tiny,stepnumber=1,showstringspaces=false}
+%\lstset{language=bash,basicstyle=\scriptsize,commentstyle=\small\itshape,stringstyle=\ttfamily,numbers=left,numberstyle=\tiny,stepnumber=1,showstringspaces=false}
 	
 % Commandes personnelles
 \def\clap#1{\hbox to 0pt{\hss #1\hss}} % Une commande sembleble  \rlap ou \llap, mais centrant son argument
