@@ -645,6 +645,317 @@ Le résultat obtenu est conforme à celui attendu :
      [exec] <<Consommation 0 : Objet numero 5
 \end{lstlisting} 
 
+\chapter[Tutoriel JCSP]{Tutoriel -- JCSP}
+
+JCSP est une implémentation de CSP pour le langage de programmation JAVA. Il fait partie des solutions les plus populaires du fait de sa simplicité et de la communauté active de développement et de forums. Développé à l'université de Kent par Peter Welch et Paul Austin, il dispose de plus d'une documentation détaillée.
+
+Nous allons montrer quelques possibilités offertes par ce langage puis le résultat d'implémentation des problèmes classiques de producteur/consommateur et du dîner des philosophes.
+
+\section{Utilisation de JCSP}
+
+\section{Producteur/Consommateur}
+
+L'implémentation du problème Producteur/Consommateur est relativement aisé en JCSP. On crée trois classes : Producteur, Consommateur et Main. Voici les programmes détaillés :
+
+\begin{lstlisting}[frame=trBL,title={Producteurs-Consommateurs: Producteur.java}]
+import org.jcsp.lang.*;
+public class Producteur implements CSProcess
+{
+  final private ChannelOutput out;
+  public Producteur (ChannelOutput out)
+        {
+                this.out = out ;
+        }
+        public void run ()
+        {
+                for (int i=1;i<=100 ; i=i+1)
+                {
+                        out.write (i);
+                }
+        }
+}
+\end{lstlisting}
+
+\begin{lstlisting}[frame=trBL,title={Producteurs-Consommateurs: Consommateur.java}]
+import org.jcsp.lang.*;
+public class Consommateur implements CSProcess
+{
+        final private ChannelInput in;
+        public Consommateur (ChannelInput in)
+        {
+                this.in = in;
+        }
+        public void run ()
+        {
+                while (true)
+                {
+			Integer d = (Integer) in.read();
+                        System.out.println ("Lit :" +d);
+                }
+        }
+}
+\end{lstlisting}
+
+\begin{lstlisting}[frame=trBL,title={Producteurs-Consommateurs: Main.java}]
+import org.jcsp.lang.*;
+
+public class Main
+{
+        public static void main (String[] args)
+        {
+	final One2OneChannel c = Channel.one2one();
+             new Parallel
+		(
+		new CSProcess[]
+			{
+			new Producteur(c.out()) ,
+			new Consommateur(c.in())
+			} 
+		).run ();
+	}
+}
+\end{lstlisting}
+
+Voici le résultat de l'execution de ce programme :
+
+Lit :2
+Lit :3
+Lit :4
+Lit :5
+Lit :6
+Lit :7
+Lit :8
+Lit :9
+Lit :10
+Lit :11
+Lit :12
+Lit :13
+Lit :14
+Lit :15
+Lit :16
+Lit :17
+Lit :18
+Lit :19
+Lit :20
+Lit :21
+Lit :22
+Lit :23
+Lit :24
+Lit :25
+Lit :26
+Lit :27
+Lit :28
+Lit :29
+Lit :30
+Lit :31
+Lit :32
+...
+
+\section{Dîner des philosophes}
+
+L'implémentation du dîner des philosophes présentée ci-dessous est directement inspirée de celle présente dans les démonstrations et fournie avec JCSP. Voici les programmes esssentiels. Pour les programmes annexes, vous pouvez vous référer aux fichiers présents dans le fichier jar joint à notre projet.
+
+\begin{lstlisting}[frame=trBL,title={Dîner des philosophes : DeadMain.java}]
+import org.jcsp.lang.*;
+import org.jcsp.demos.util.*;
+
+public class DeadMain {
+
+
+  public static void main (String[] args) {
+
+  	Ask.app (TITLE, DESCR);
+  	Ask.addPrompt ("Nombre de philosophes", 1, 100, 5);
+  	Ask.show ();
+  	final int nPhilosophers = Ask.readInt ("Nombre de philosophes");
+  	Ask.blank ();
+
+    Any2OneChannel report = Channel.any2one ();
+
+    new Parallel (
+      new CSProcess[] {
+        new DiningPhilosophersCollege (nPhilosophers, report.out ()),
+        new TextDisplay (nPhilosophers, report.in ())
+      }
+    ).run ();
+  }
+}
+\end{lstlisting}
+
+\begin{lstlisting}[frame=trBL,title={Dîner des philosophes : DiningPhilosophersCollege.java}]
+import org.jcsp.lang.*;
+
+class DiningPhilosophersCollege implements CSProcess {
+
+  private final int nPhilosophers;
+  private final ChannelOutput report;
+
+  public DiningPhilosophersCollege (int nPhilosophers, ChannelOutput report) {
+    this.nPhilosophers = nPhilosophers;
+    this.report = report;
+  }
+
+  public void run () {
+
+    final One2OneChannel[] left = Channel.one2oneArray (nPhilosophers);
+    final One2OneChannel[] right = Channel.one2oneArray (nPhilosophers);
+
+    final Fork[] fork = new Fork[nPhilosophers];
+    for (int i = 0; i < nPhilosophers; i++) {
+      fork[i] = new Fork (nPhilosophers, i,
+                          left[i].in (), right[(i + 1)%nPhilosophers].in (), report);
+    }
+
+    final Philosopher[] phil = new Philosopher[nPhilosophers];
+    for (int i = 0; i < nPhilosophers; i++) {
+      phil[i] = new Philosopher (i, left[i].out (), right[i].out (), report);
+    }
+
+    new Parallel (
+      new CSProcess[] {
+        new Parallel (phil),
+        new Parallel (fork),
+        new Clock (report)
+      }
+    ).run ();
+  }
+}
+\end{lstlisting}
+
+\begin{lstlisting}[frame=trBL,title={Dîner des philosophes : Fork.java}]
+import org.jcsp.lang.*;
+class Fork implements CSProcess {
+
+  protected int id;
+  protected Integer Id;
+  protected AltingChannelInput left, right;
+  protected ChannelOutput report;
+
+  protected ForkReport leftUp, leftDown, rightUp, rightDown;
+
+  public Fork (int nPhilosophers, int id,
+               AltingChannelInput left, AltingChannelInput right,
+               ChannelOutput report) {
+    this.id = id;
+    Id = new Integer(id);
+    this.left = left;
+    this.right = right;
+    this.report = report;
+    leftUp = new ForkReport (id, id, ForkReport.UP);
+    leftDown = new ForkReport (id, id, ForkReport.DOWN);
+    rightUp = new ForkReport ((id + 1) % nPhilosophers, id, ForkReport.UP);
+    rightDown = new ForkReport ((id + 1) % nPhilosophers, id, ForkReport.DOWN);
+  }
+
+  public void run () {
+    Alternative alt = new Alternative (new Guard[] {left, right});
+    final int LEFT = 0;
+    final int RIGHT = 1;
+    while (true) {
+      switch (alt.fairSelect ()) {
+        case LEFT:
+          left.read ();
+          report.write (leftUp);
+          left.read ();
+          report.write (leftDown);
+        break;
+        case RIGHT:
+          right.read ();
+          report.write (rightUp);
+          right.read ();
+          report.write (rightDown);
+        break;
+      }
+    }
+  }
+}
+\end{lstlisting}
+
+\begin{lstlisting}[frame=trBL,title={Dîner des philosophes : Philosopher.java}]
+import java.util.Random;
+import org.jcsp.lang.*;
+import org.jcsp.plugNplay.*;
+
+class Philosopher implements CSProcess {
+
+  protected final static int seconds = 1000;
+
+  protected final static int maxThink = 3*seconds;
+  protected final static int maxEat = 5*seconds;
+
+  protected final static String[] space =
+    {"  ", "    ", "      ", "        ", "          "};
+
+  protected final int id;
+  protected final ChannelOutput left, right;
+  protected final ChannelOutput report;
+
+  protected final Random random;
+
+  // Constructeurs
+
+  public Philosopher (int id, ChannelOutput left, ChannelOutput right, ChannelOutput report) {
+    this.id = id;
+    this.left = left;
+    this.right = right;
+    this.report = report;
+    this.random = new Random (id + 1);
+  }
+
+  public void run () {
+
+    final Integer Id = new Integer (id);
+    final CSTimer tim = new CSTimer ();
+
+    final PhilReport thinking = new PhilReport (id, PhilReport.THINKING);
+    final PhilReport hungry = new PhilReport (id, PhilReport.HUNGRY);
+    final PhilReport sitting = new PhilReport (id, PhilReport.SITTING);
+    final PhilReport eating= new PhilReport (id, PhilReport.EATING);
+    final PhilReport leaving = new PhilReport (id, PhilReport.LEAVING);
+
+    final ProcessWrite signalLeft = new ProcessWrite (left);
+    signalLeft.value = Id;
+
+    final ProcessWrite signalRight = new ProcessWrite (right);
+    signalRight.value = Id;
+
+    //final CSProcess signalForks = new Parallel (new CSProcess[] {signalLeft, signalRight});
+    final CSProcess signalForks = new Sequence (
+    	new CSProcess[] {
+    		signalLeft,
+    		new CSProcess () { public void run () { tim.sleep (seconds); } },
+    		signalRight
+    	}
+    );
+
+    while (true) {
+      report.write (thinking);
+      tim.sleep (range (maxThink));    // pense
+      report.write (hungry);
+      report.write (sitting);
+      signalForks.run ();              // pick up my forks (in parallel)
+      report.write (eating);
+      tim.sleep (range (maxEat));      // mange
+      report.write (leaving);
+      signalForks.run ();              // put down my forks (in parallel)
+    }
+  }
+
+  protected int range (int n) {
+    // returns random int in the range 0 .. (n - 1)  [This is not needed in JDK 1.2.x]
+    int i = random.nextInt ();
+    if (i < 0) {
+      if (i == Integer.MIN_VALUE) {
+        i = 42;
+      } else {
+        i = -i;
+      }
+    }
+    return i % n;
+  }
+}
+\end{lstlisting}
+
 \appendix
 \chapter{ Tour d'horizon de CSO }
 \label{chap:cso}
@@ -715,6 +1026,11 @@ On a ici d'abord rajouter \textsf{private} à la déclaration de \textsf{billes}
 Une écriture récurrente dans nos programmes est \textsf{||(for ( i <-0 until n) yield $p_{i}$ )}, et permet de lancer un nombre fini de processus en parallèle. Elle est équivalente à \textsf{ $p_{0}$ ||  $p_{1}$ ||  $p_{n-1}$ }.
 Pour lancer un \textsc{PROC}, il suffit d'ajouter deux parenthèses après \textsf{$p_i()$}
 \end{description}
+
+\chapter[Tutoriel JCSP]{Tutoriel -- JCSP}
+
+JCSP est une implémentation de CSP pour le langage de programmation JAVA. Il fait partie des solutions les plus populaires du fait de sa simplicité et de la communauté active de développement et de forums. Développé par l'université de Kent, il dispose de plus d'une documentation détaillée.
+Nous allons montrer 
 
 \begin{thebibliography}{Cpa2008}
 \bibitem[Cpa2008]{cpa2008-cso} {\textit{Communicating Process Architectures 2008}, Susan Stepney, Fiona Polack, Alistair McEwan, Peter Welch, and Wilson Ifill (Eds.), IOS Press, 2008
