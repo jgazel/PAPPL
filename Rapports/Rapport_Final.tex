@@ -109,6 +109,47 @@ Pour mettre en place une programmation concurrente, on peut d'ores et déjà uti
 Notre travail a donc consisté à prendre en main ces bibliotèques, voire le langage pour Scala, puisque nous connaissions peu ce langage avant ce projet.\\
 Nous exposerons donc leur mise en place. Les principales caractéristiques de ces implémentations seront décrites, puis nous exposerons les programmes classiques de la programmation concurrente décrits à l'aide de ces implémentations. Enfin, nous dresserons un bilan de notre travail.
 
+\part{Présentation de CSP}
+
+Afin de rendre ce rapport indépendant et utilisable par le plus grand nombre, nous avons fait le choix de faire ici un rapide aperçu de CSP, afin que le lecteur puisse comprendre les mécanismes mis en place dans la suite. Pour faire cette présentation, nous nous sommes principalement inspiré du cours Parallélisme et Systèmes Répartis d'Olivier Roux \cite{pasyr}
+Hoare dans un article devenu célèbre présente le CSP (Communicating Sequential Processes). Il s'agit d'un langage impératif, parallèle, avec des communications par échanges synchrones de message.
+
+\section{Notion de rendez-vous}
+Le CSP utilise des commandes d'entrées et de sortie pour synchroniser ses messages. Pour transmettre un message entre un producteur et un consommateur, par exemple x, on utilise :
+
+\begin{lstlisting}[frame=trBL]
+P:: Q ! M(x)
+Q:: P ? M(y)
+\end{lstlisting}
+ \begin{itemize}
+ \item P : proc. originaire
+ \item Q : proc. destinataire,
+ \item M : identificateur de message
+ \item x : contenu du message
+ \end{itemize}
+ 
+ \section{Notion de garde et commande gardée}
+ Voici la forme usuelle utilisant la garde et la commande gardée :
+ 
+ \begin{lstlisting}[frame=trBL]
+<commande gardee> ::= <garde> -> <suite d’instructions>
+<garde> ::= <CB>, <CES>
+\end{lstlisting}
+
+avec CB condition booléenne et CES, commande d'entrée/sortie.
+
+En fonction des gardes, on a les conséquences suivantes :
+fausse : CB fausse ou correspondant de la CES inexistant ou
+mort
+échec de la commande gardée
+vraie : CB vraie et correspondant de la CES prêt à échanger
+communication ET exécution de la suite d’instructions qui suit
+la garde
+neutre : CB vraie et correspondant de la CES indisponible
+attente (de communication)
+
+
+
 \part{Implémentation des différents langages}
 \chapter[CSO]{Communicating Scala Objects -- CSO}
 \begin{quotation}
@@ -764,11 +805,11 @@ Lit :32
 
 L'implémentation du dîner des philosophes présentée ci-dessous est directement inspirée de celle présente dans les démonstrations fournies avec JCSP. Voici les programmes esssentiels. Pour les programmes annexes, vous pouvez vous référer aux fichiers présents dans le fichier jar joint à notre projet.
 
+Dans le fichier principal, on affiche la description du problème, puis on demande à l'utilisateur de rentrer le nombre de philosophes qu'il souhaite. On crée alors un canal Any2Any et on lance un processus parallèle composé de l'affichage et du calcul de la situation.
+
 \begin{lstlisting}[frame=trBL,title={Dîner des philosophes : DeadMain.java}]
 import org.jcsp.lang.*;
 import org.jcsp.demos.util.*;
-
-Dans le fichier principal, on affiche la description du problème, puis on demande à l'utilisateur de rentrer le nombre de philosophes qu'il souhaite. On crée alors un canal Any2Any et on lance un processus parallèle composé de l'affichage et du calcul de la situation.
 
 public class DeadMain {
 
@@ -1098,6 +1139,8 @@ make run
 Les programmes sont alors exécutés. Le fichier principal est par défaut appelé Main.java. Cependant, le lecteur est libre de modifier ce choix. Il suffit de modifier la ligne correspondante dans le makefile.
 
 \begin{thebibliography}{Cpa2008}
+\bibitem[Pasyr]{pasyr} {\textit{Cours de Parallélisme et Systèmes Répartis}, Olivier Roux, \'Ecole Centrale de Nantes, 2011}
+
 \bibitem[Cpa2008]{cpa2008-cso} {\textit{Communicating Process Architectures 2008}, Susan Stepney, Fiona Polack, Alistair McEwan, Peter Welch, and Wilson Ifill (Eds.), IOS Press, 2008
 \copyright 2008 The authors and IOS Press. All rights reserved.\\
 \url{http://citeseerx.ist.psu.edu/viewdoc/download?doi=10.1.1.164.8856&rep=rep1&type=pdf}}
