@@ -91,6 +91,7 @@
 \makeatother
 
 
+
   \title{Programmation Concurrente}
   \subtitle{Communicating Scala Objects\\Java Communicating Sequential Processes}
   \location{Nantes}
@@ -246,7 +247,7 @@ Le jeu de la vie, automate cellulaire imaginé par John Horton Conway en 1970, e
 Notre précédent script a télécharger directement le jeu \emph{Lyfe} dans le répertoire courant, sous le nom de \textbf{CSwing}.\\
 
 \subsubsection{Compilation}
-
+\label{subsubsec:cswing}
 \begin{enumerate}
 \item Placez-vous dans le répertoire CSwing
   \begin{verbatim} 
@@ -1149,15 +1150,59 @@ class Philosopher implements CSProcess {
 \part{Comparaison de CSO et JCSP}
 \chapter{Une préférence pour JCSP}
 
-\lettrine{A}{près plusieurs} semaines passées sur les deux langages, il appara\^it que CSO est bien plus compliqué que JCSP; d'une part par la prise en main du langage de programmation Scala que par sa syntaxe particulière pour les \emph{channels synchrones}.\\
+\lettrine{\`A}{près plusieurs} semaines passées sur les deux langages, il appara\^it que CSO est bien plus compliqué que JCSP; d'une part par la prise en main du langage de programmation Scala que par sa syntaxe particulière pour les \emph{channels synchrones}.\\
 
 \section{Avantages et Inconvénients}
+Nous allons exposer à présent les avantages et inconvénient des deux solutions.
+
+\subsection{Avantages de CSO}
+Les avantages de CSO sont en fait confondus avec les avantages de Scala. En effet, nous sommes arrivés à penser que CSO en lui m\^eme n'est pas une meilleure ou une moins bonne solution que JCSP. Il relève surtout du langage qu'il utilise. On peut donc globalement dire que :
+\begin{itemize}
+\item CSO est moins verbeux que JCSP. Les programmes sont donc souvent plus courts ...
+\item ceci permet une meilleure maintenance du code,
+\item une meilleure lisibilité, ce qui facilite le partage
+\item enfin l'argument majeur est les possibilités offertes par la programmation fonctionelle
+\end{itemize}
+
+\subsection{Inconvénients de CSO}
+Malheureusement, ils nous semblent conséquents:
+ \begin{itemize}
+\item une documentation restreinte
+\item le caractère quasi inexistent d'une communauté active de développement
+\item le statut qui nous semble trop exclusif de Bernard Sufrin.
+\end{itemize}
+
+Nous sommes néanmoins optimistes.  Scala est un langage jeune qui gagne de plus en plus en popularité. Nous pensons que de ce fait, le CSO est moins traité car le Scala n'est pas encore parfaitement implanté dans les langages de programmation majeurs. Du fait, de l'utilisation de la JVM ainsi que de sa concision face à Java. Cette situation devrait donc être amenée à évoluer rapidement.
+
+\subsection{Avantages de JCSP}
+Le JCSP possède de solides avantages. 
+\begin{itemize}
+\item une simplicité d'usage m\^eme pour ceux ne disposant pas de connaissances particulières dans les langages de programmation concurrente.
+\item une installation bien plus aisée que celle de CSO (cet argument est uniquement valable si l'on ne dispose pas du fichier d'installation pour CSO que nous avons conçu)
+\item une documentation riche et fournie
+\item de nombreux forums permettant l'entraide et la résolution de problèmes
+\end{itemize}
+
+\subsection{Inconvénients de JCSP}
+Au contraire, JCSP nous appara\^it comme une solution très intéressante et m\^ure pour la programmation concurrente. Si nous devions absolument émettre une restriction, elle serait s\^urement sur le caractère trop restreint de son utilisation et sur l'incertitude concernant sa pérennité.
+
 \section{Notre avis}
+JCSP appara\^it comme une solution bien plus efficace, \textit{pour le moment} , que CSO. Plus facile de prise en main, mieux documenté et avec une communauté active de développeurs, CSO para\^it encore trop jeune en comparaison. Dans une visée purement pédagogique, JCSP nous semble plus pertinent. 
 
 \chapter{Conclusion}
 
+
 \lettrine{C}{e projet} d'application nous a permis de prendre en main différentes technologies que nous n'avions pas obligatoirement vues en cours : CSO, Scala, JCSP. De plus, nous avons pu mettre en pratique, les différents éléments vus en cours de Parallélisme et Systèmes Répartis et de les approfondir.\\
-En bilan, nous avons étudié les différents mécanismes en jeu pour la programmation concurrente pour les langages Scala et Java. Nous avons programmé les principaux problèmes classiques dans ces bibliotèques. De surcroît, nous fournissons des tutoriels permettant de faciliter leur utilisation. L'objectif étant de les utiliser pour les promotions suivantes à la manière de CTJ actuellement.
+En bilan, nous avons étudié les différents mécanismes en jeu pour la programmation concurrente pour les langages Scala et Java. Nous avons programmé les principaux problèmes classiques dans ces bibliotèques. De surcroît, nous fournissons des tutoriels permettant de faciliter leur utilisation. L'objectif étant de les utiliser pour les promotions suivantes à la manière de CTJ actuellement.\\
+
+Afin d'améliorer la compréhension des langages concurrents, nous proposons diverses solutions :
+
+\begin{itemize}
+\item étudier en cours, même de façon succinte Scala, alternative de plus en plus crédible de Java,
+\item poursuivre l'étude de la programmation concurrente mais il nous semble encore précoce de traiter de CSO en cours de PASYR,
+\item éventuellement proposer un sujet de veille technologique concernant les solutions existantes de programmation concurrente.
+\end{itemize}
+
 
 \part{Annexes}
 \appendix
@@ -1339,7 +1384,7 @@ Le script install\_{}cso.sh automatise l'installation de CSO et du programme \em
   \end{verbatim}  
 \end{enumerate}
 
-
+Pour lancer le programme \emph{lyfe}, reportez-vous à la sous-section \vref{install\_{}cso.sh}.
 
 
 
