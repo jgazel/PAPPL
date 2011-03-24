@@ -120,7 +120,7 @@ Nous exposerons donc leur mise en place. Les principales caractéristiques de ce
 \bigskip
 \section{Problème sur CSO}
 
-\lettrine{S}{ous la} supervision de notre encadrant M.\ \textsc{Roux}, nous nous sommes penchés sur CSO -- Communcating Scala Objects. Ce language est une extension de Scala, et permet d'implémenter tout algorithme de programmation concurrentielle.\\
+\lettrine{S}{ous la} supervision de notre encadrant M.\ \textsc{Roux}, nous nous sommes penchés sur CSO -- Communcating Scala Objects. Ce langage est une extension de Scala, et permet d'implémenter tout algorithme de programmation concurrentielle.\\
 
 Après avoir construit un fichier \textsf{buid.xml} capable de compiler, nettoyer, lancer le programme en adjoignant les bonnes ressources via une simple commande, puis avoir saisi la syntaxe nécessaire d'abord à Scala, puis à CSO, les programmes 'producteur-consommateur' et 'lecteur-écrivain'étaient l'un des objectifs de notre projet.\\
 
@@ -652,9 +652,15 @@ Nous allons montrer quelques possibilités offertes par ce langage puis le résu
 
 \section{Utilisation de JCSP}
 
+Puisque nous nous sommes penchés dans un premier temps, nous pouvons le dire sans trop d'hésitation, l'utilisation de JCSP paraît fort aisée à côté de celle de CSO. Nous pouvions pensé que cela était peut-être dû à notre meilleure connaissance de Java que de CSO, mais après plusieurs heures d'utilisation, nous pouvons dire que JCSP possède quelques atouts que ne possède pas CSO. Nous reviendrons sur ce point lors de la comparaison des deux solutions.
+Ils possèdent toutefois plusieurs points communs, notamment la gestion des canaux qui est identique à celle vue précedemment (voir la partie Les différents pipes de CSO).
+Contrairement à CSO, nous n'avons rencontré peu de problèmes. Ceux que nous avons rencontré ont pu être rapidement résolus, grâce notamment à une communauté active d'utilisateurs de JCSP. Il reprend tous les avantages de CSP d'une part et ceux de Java d'autre part. Nous allons à présent voir sa structure au travers de deux exemples : le problème Producteur/Consommateur et celui du dîner des philosophes.
+
 \section{Producteur/Consommateur}
 
-L'implémentation du problème Producteur/Consommateur est relativement aisé en JCSP. On crée trois classes : Producteur, Consommateur et Main. Voici les programmes détaillés :
+L'implémentation du problème Producteur/Consommateur est relativement facile en JCSP. On crée trois classes : Producteur, Consommateur et Main. Voici les programmes détaillés :
+
+Le producteur se contente d'une boucle et envoyant dans le canal out un message avec i. 
 
 \begin{lstlisting}[frame=trBL,title={Producteurs-Consommateurs: Producteur.java}]
 import org.jcsp.lang.*;
@@ -675,6 +681,8 @@ public class Producteur implements CSProcess
 }
 \end{lstlisting}
 
+Le consommateur boucle indéfiniment reçoit cet entier grâce au canal in.
+
 \begin{lstlisting}[frame=trBL,title={Producteurs-Consommateurs: Consommateur.java}]
 import org.jcsp.lang.*;
 public class Consommateur implements CSProcess
@@ -694,6 +702,8 @@ public class Consommateur implements CSProcess
         }
 }
 \end{lstlisting}
+
+Le programme principal crée un canal de type One2One, puis on crée un processus parallèle composé du producteur et du consommateur.
 
 \begin{lstlisting}[frame=trBL,title={Producteurs-Consommateurs: Main.java}]
 import org.jcsp.lang.*;
@@ -749,17 +759,18 @@ Lit :30
 Lit :31
 Lit :32
 ...
-
+ 
 \section{Dîner des philosophes}
 
-L'implémentation du dîner des philosophes présentée ci-dessous est directement inspirée de celle présente dans les démonstrations et fournie avec JCSP. Voici les programmes esssentiels. Pour les programmes annexes, vous pouvez vous référer aux fichiers présents dans le fichier jar joint à notre projet.
+L'implémentation du dîner des philosophes présentée ci-dessous est directement inspirée de celle présente dans les démonstrations fournies avec JCSP. Voici les programmes esssentiels. Pour les programmes annexes, vous pouvez vous référer aux fichiers présents dans le fichier jar joint à notre projet.
 
 \begin{lstlisting}[frame=trBL,title={Dîner des philosophes : DeadMain.java}]
 import org.jcsp.lang.*;
 import org.jcsp.demos.util.*;
 
-public class DeadMain {
+Dans le fichier principal, on affiche la description du problème, puis on demande à l'utilisateur de rentrer le nombre de philosophes qu'il souhaite. On crée alors un canal Any2Any et on lance un processus parallèle composé de l'affichage et du calcul de la situation.
 
+public class DeadMain {
 
   public static void main (String[] args) {
 
@@ -780,6 +791,8 @@ public class DeadMain {
   }
 }
 \end{lstlisting}
+
+Ce fichier est un peu plus complexe. Après avoir crée deux canaux left et right utilisés pour renseigner sur la présence ou non de fourchettes dans les mains gauche et droite de chaque philosophe. On utilise ensuite une parallélisation entre phil, fork et un compteur de temps.
 
 \begin{lstlisting}[frame=trBL,title={Dîner des philosophes : DiningPhilosophersCollege.java}]
 import org.jcsp.lang.*;
