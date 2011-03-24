@@ -164,13 +164,16 @@
 \subsection{Présentation de CSP}
 \begin{frame} 
   \frametitle{Présentation de CSP}
-  1978 $\rightarrow$ Article célèbre de Hoare\\
+  1978 $\rightarrow$ Article célèbre de Hoare\\ 
+  \pause
+  \begin{block}{CSP}
   CSP est un langage :
 \begin{itemize}[<+->]
 \item impératif
 \item parallèle
 \item communications par échanges synchrones de message
  \end{itemize}
+ \end{block}
 \end{frame}
 
 \begin{frame} [containsverbatim]
@@ -180,15 +183,17 @@ Exemple d'échange de message :
 P:: Q ! M(x)
 Q:: P ? M(y)
 \end{lstlisting}
-\end{frame}
-
-\begin{frame} [containsverbatim]
-\framesubtitle{Notion de garde et commande gardée}
 
  \begin{lstlisting}[frame=trBL]
 <commande gardee> ::= <garde> -> <suite d instructions>
 <garde> ::= <CB>, <CES>
 \end{lstlisting}
+\end{frame}
+
+\begin{frame} [containsverbatim]
+\framesubtitle{Notion de garde et commande gardée}
+
+
 
 \begin{lstlisting}[frame=trBL,title={Sélective}]
 [[
@@ -209,6 +214,7 @@ x:=1;
 \end{frame}
 
 \section{Implémentation des différents langages}
+\subsection{Communicating Scala Objects – CSO}
 \begin{frame} 
   \frametitle{Implémentation des différents langages}
   \framesubtitle{Communicating Scala Objects – CSO}
@@ -223,12 +229,20 @@ x:=1;
 \subsection{Installation de Scala et CSO}
 \begin{frame} 
 \frametitle{Installation de Scala et CSO}
-
+Très peu de documentation disponible
+\pause
+\begin{quotation}
+\textit{\og This task speaks for itself. If you find it hard to do this then you may find it impossible
+to accomplish any of the subsequent tasks.\fg}
+\begin{flushright}
+\textsc{Bernard Sufrin}
+\end{flushright}
+\end{quotation}
 \end{frame}
 
 \begin{frame} 
 \frametitle{Lyfe}
-
+Exemple d'execution
 \end{frame}
 
 \begin{frame} 
@@ -242,11 +256,23 @@ x:=1;
 \end{frame}
 
 \begin{frame} 
+\frametitle{Les différents pipes}
+\begin{block}{Canaux synchronisés}
+\begin{itemize}[<+->]
+\item \textsf{OneOne[T]} 
+\item \textsf{ManyOne[T]} 
+\item \textsf{OneMany[T]} 
+\item \textsf{ManyMany[T]} 
+\end{itemize}
+\end{block}
+\end{frame}
+
+\begin{frame} 
 \frametitle{Algorithmes classiques}
 
 \end{frame}
 
-\section{Java Communicating Sequential Processes – JCSP}
+\subsection{Java Communicating Sequential Processes – JCSP}
 \begin{frame}
 \frametitle{Java Communicating Sequential Processes – JCSP}
 \begin{quotation}
@@ -260,6 +286,7 @@ x:=1;
 \subsection{Exemples fournis avec JCSP}
 \begin{frame}
 \frametitle{Exemples fournis avec JCSP}
+Exemple d'execution
 \end{frame}
 
 \subsection{Producteur/Consommateur}
@@ -387,7 +414,7 @@ Exemple d'execution
 \end{itemize}
 \end{frame}
 
-\section{Bibliographie}
+\section*{Bibliographie}
 
 \begin{frame} 
 \frametitle{Bibliographie}
