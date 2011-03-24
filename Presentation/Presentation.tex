@@ -150,7 +150,7 @@
   \tableofcontents[sections=\thesection]
 \end{frame}
 % ---------------------------------------------
-\subsection{Programmation concurrente}
+\section{Programmation concurrente}
 % avec l'environnement frame
 \begin{frame}[label=pagesimple]
   \frametitle{Programmation concurrente}
@@ -161,9 +161,10 @@
     \end{itemize}
 \end{frame}
 
+\subsection{Présentation de CSP}
 \begin{frame} 
   \frametitle{Présentation de CSP}
-  Article célèbre de Hoare
+  1978 $\rightarrow$ Article célèbre de Hoare\\
   CSP est un langage :
 \begin{itemize}[<+->]
 \item impératif
@@ -207,17 +208,127 @@ x:=1;
 \end{lstlisting}
 \end{frame}
 
+\section{Implémentation des différents langages}
+\begin{frame} 
+  \frametitle{Implémentation des différents langages}
+  \framesubtitle{Communicating Scala Objects – CSO}
+  \begin{quotation}
+     \textit{\og CSO (Communicating Scala Objects) – a notationally convenient embedding of the essence of occam in a modern, generically typed, object-oriented programming language that is compiled to Java Virtual Machine (JVM) code.\fg}
+   \begin{flushright}
+\textsc{Bernard Sufrin}
+\end{flushright}
+\end{quotation}   
+\end{frame}
+
+\subsection{Installation de Scala et CSO}
+\begin{frame} 
+\frametitle{Installation de Scala et CSO}
+
+\end{frame}
 
 \begin{frame} 
-  \frametitle{Conseils à suivre}
-  \framesubtitle{Des gestes quotidiens}
-  \begin{block}{Nos conseils}
-     \begin{itemize}[<+->]
-       \item Même en veille, un appareil électrique consomme de l'énergie.
-       \item Préférez un ordinateur portable à un ordinateur de Bureau.
-       \item Éteignez votre modem / box Internet la nuit.
-     \end{itemize}
-  \end{block}   
+\frametitle{Lyfe}
+
+\end{frame}
+
+\begin{frame} 
+\frametitle{Premiers essais en CSO...}
+
+\end{frame}
+
+\begin{frame} 
+\frametitle{...et premiers problèmes}
+
+\end{frame}
+
+\begin{frame} 
+\frametitle{Algorithmes classiques}
+
+\end{frame}
+
+\section{Java Communicating Sequential Processes – JCSP}
+\begin{frame}
+\frametitle{Java Communicating Sequential Processes – JCSP}
+\begin{quotation}
+\textit{\og Although CSP is a mathematical system, JCSP does not require in-depth mathematical skill, allowing instead that programmers can achieve well-behaved software just by following simple rules.\fg}
+\begin{flushright}
+\textsc{University of Kent at Canterbury}
+\end{flushright}
+\end{quotation}
+\end{frame}
+
+\subsection{Exemples fournis avec JCSP}
+\begin{frame}
+\frametitle{Exemples fournis avec JCSP}
+\end{frame}
+
+\subsection{Producteur/Consommateur}
+\begin{frame}[containsverbatim]
+\framesubtitle{Producteur/Consommateur}
+\begin{lstlisting}[frame=trBL,title={Producteurs-Consommateurs: Producteur.java}]
+import org.jcsp.lang.*;
+public class Producteur implements CSProcess
+{
+  final private ChannelOutput out;
+  public Producteur (ChannelOutput out)
+        {
+                this.out = out ;
+        }
+        public void run ()
+        {
+                for (int i=1;i<=100 ; i=i+1)
+                {
+                        out.write (i);
+                }
+        }
+}
+\end{lstlisting}
+\end{frame}
+
+\begin{frame}[containsverbatim]
+\framesubtitle{Producteur/Consommateur}
+\begin{lstlisting}[frame=trBL,title={Producteurs-Consommateurs: Consommateur.java}]
+import org.jcsp.lang.*;
+public class Consommateur implements CSProcess
+{
+        final private ChannelInput in;
+        public Consommateur (ChannelInput in)
+        {
+                this.in = in;
+        }
+        public void run ()
+        {
+                while (true)
+                {
+			Integer d = (Integer) in.read();
+                        System.out.println ("Lit :" +d);
+                }
+        }
+}
+\end{lstlisting}
+\end{frame}
+
+\begin{frame}[containsverbatim]
+\framesubtitle{Producteur/Consommateur}
+\begin{lstlisting}[frame=trBL,title={Producteurs-Consommateurs: Main.java}]
+import org.jcsp.lang.*;
+
+public class Main
+{
+        public static void main (String[] args)
+        {
+	final One2OneChannel c = Channel.one2one();
+             new Parallel
+		(
+		new CSProcess[]
+			{
+			new Producteur(c.out()) ,
+			new Consommateur(c.in())
+			} 
+		).run ();
+	}
+}
+\end{lstlisting}
 \end{frame}
 
 
