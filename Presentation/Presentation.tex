@@ -181,11 +181,32 @@ Q:: P ? M(y)
 \end{lstlisting}
 \end{frame}
 
+\begin{frame} [containsverbatim]
+\framesubtitle{Notion de garde et commande gardée}
 
-\section{Notre grande enquête}
-\begin{frame}{Plan}
-  \tableofcontents[sections=\thesection]
+ \begin{lstlisting}[frame=trBL]
+<commande gardee> ::= <garde> -> <suite d instructions>
+<garde> ::= <CB>, <CES>
+\end{lstlisting}
+
+\begin{lstlisting}[frame=trBL,title={Sélective}]
+[[
+(state=1) -> state:=state+1;
+[]
+(state=1) -> state:=state-1;
+]]
+\end{lstlisting}
+
+\begin{lstlisting}[frame=trBL,title={Répétitive}]
+x:=1;
+*[[
+(x<=N) -> imprimer(x); x++;
+[]
+(x=N) -> skip;
+]]
+\end{lstlisting}
 \end{frame}
+
 
 \begin{frame} 
   \frametitle{Conseils à suivre}
