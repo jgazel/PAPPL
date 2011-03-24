@@ -132,23 +132,49 @@ Q:: P ? M(y)
  Voici la forme usuelle utilisant la garde et la commande gardée :
  
  \begin{lstlisting}[frame=trBL]
-<commande gardee> ::= <garde> -> <suite d’instructions>
+<commande gardee> ::= <garde> -> <suite d instructions>
 <garde> ::= <CB>, <CES>
 \end{lstlisting}
 
 avec CB condition booléenne et CES, commande d'entrée/sortie.
 
 En fonction des gardes, on a les conséquences suivantes :
-fausse : CB fausse ou correspondant de la CES inexistant ou
-mort
-échec de la commande gardée
-vraie : CB vraie et correspondant de la CES prêt à échanger
-communication ET exécution de la suite d’instructions qui suit
+\begin{itemize}
+\item fausse : CB fausse ou correspondant de la CES inexistant ou
+mort $\rightarrow$ échec de la commande gardée
+\item vraie : CB vraie et correspondant de la CES prêt à échanger $\rightarrow$ communication ET exécution de la suite d’instructions qui suit
 la garde
-neutre : CB vraie et correspondant de la CES indisponible
+\item neutre : CB vraie et correspondant de la CES indisponible $\rightarrow$
 attente (de communication)
+\end{itemize}
 
+On peut maintenant implémenter une sélective ou une répétitive.
 
+\section{Sélective}
+Sélective : choix indéterministe parmi toutes les gardes vraies,
+attente si aucune n’est vraie, et échec de la sélective si toutes
+sont fausses
+
+ \begin{lstlisting}[frame=trBL]
+[[
+(state=1) -> state:=state+1;
+[]
+(state=1) -> state:=state-1;
+]]
+\end{lstlisting}
+
+ \section{Répétivite}
+ Idem de façon répétitive jusqu’à ce que toutes les
+gardes soient fausses
+
+\begin{lstlisting}[frame=trBL]
+x:=1;
+*[[
+(x<=N) -> imprimer(x); x++;
+[]
+(x=N) -> skip;
+]]
+\end{lstlisting}
 
 \part{Implémentation des différents langages}
 \chapter[CSO]{Communicating Scala Objects -- CSO}
