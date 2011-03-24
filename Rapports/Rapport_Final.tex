@@ -106,10 +106,10 @@
 
 \newpage
 
-\lettrine{L}{'importance} de la programmation concurrente n'a cessé de croître depuis quelques années. Sa connaissance et sa maîtrise deviendra à terme une nécessité pour tous les développeurs au regard du besoin de parallélisation des tâches.\\
+\lettrine{L}{'importance} de la programmation concurrente n'a cessé de croître depuis quelques années. Sa connaissance et sa maîtrise deviendront à terme une nécessité pour tous les développeurs au regard du besoin de parallélisation des tâches.\\
 Pour mettre en place une programmation concurrente, on peut d'ores et déjà utiliser \textsc{CSP}. Imaginé par Hoare, cet algèbre de processus permet de modéliser les différentes interactions entre systèmes. Ce langage a connu plusieurs implémentations pour les principaux langages de programmation et notamment pour Java et Scala.\\
 
-Notre travail a donc consisté à prendre en main ces bibliotèques, voire le langage pour Scala, puisque nous connaissions peu ce langage avant ce projet.\\
+Notre travail a donc consisté à prendre en main ces bibliotèques, voire le langage pour Scala, puisque nous le connaissions peu avant ce projet.\\
 Nous exposerons donc leur mise en place. Les principales caractéristiques de ces implémentations seront décrites, puis nous exposerons les programmes classiques de la programmation concurrente décrits à l'aide de ces implémentations. Enfin, nous dresserons un bilan de notre travail.\\
 
 \chapter{Notions générales via CSP}
@@ -125,10 +125,11 @@ P:: Q ! M(x)
 Q:: P ? M(y)
 \end{lstlisting}
  \begin{itemize}
- \item P : proc. originaire
- \item Q : proc. destinataire,
+ \item P : processus originaire
+ \item Q : processus destinataire,
  \item M : identificateur de message
  \item x : contenu du message
+ \item y : variable affectataire du message
  \end{itemize}
  
  \section{Notion de garde et commande gardée}
@@ -191,7 +192,7 @@ x:=1;
 \bigskip
 \section{Approche de Scala et de CSO}
 
-\lettrine{S}{ous la} supervision de notre encadrant M.\ \textsc{Roux}, nous nous sommes penchés sur CSO -- Communcating Scala Objects. Ce language est une extension de Scala\footnote{Site officiel (en anglais) à l'adresse \url{http://www.scala-lang.org/}}, et permet d'implémenter tout algorithme de programmation concurrentielle.\\
+\lettrine{S}{ous la} supervision de notre encadrant M.\ \textsc{Roux}, nous nous sommes penchés sur CSO -- Communcating Scala Objects. Ce langage est une extension de Scala\footnote{Site officiel (en anglais) à l'adresse \url{http://www.scala-lang.org/}}, et permet d'implémenter tout algorithme de programmation concurrentielle.\\
 
 Scala est un langage de programmation multi-paradigme conçu à l'École polytechnique fédérale de Lausanne (EPFL) pour exprimer les modèles de programmation courants dans une forme concise et élégante. Son nom vient de l'anglais Scalable language qui signifie à peu près \og langage adaptable \fg ou \og langage qui peut être mis à l'échelle \fg. Il peut en effet être vu comme un métalangage.
 Scala, qui est un langage relativement jeune (2006), intègre les paradigmes de \emph{programmation orientée objet} et de \emph{programmation fonctionnelle}, avec un typage statique. Il concilie ainsi ces deux paradigmes habituellement opposés (à de rares exceptions près, telle que le langage OCaml) et offre au développeur la possibilité de choisir le paradigme le plus approprié à son problème (source \textsc{Wikipedia}).\\
@@ -200,7 +201,7 @@ Notre seule est unique source pour ce projet a été la publication du Dr.\ \tex
 
 \subsection{Installation de Scala et de CSO}
 
-La première étape est d'installer Scala et CSO sur notre machine. Première difficulté car très peu voire aucune documentation est disponible à ce sujet. 
+La première étape est d'installer Scala et CSO sur notre machine. Première difficulté car très peu voire aucune documentation n'est disponible à ce sujet. 
 
 \begin{quotation}
 \textit{\og This task speaks for itself. If you find it hard to do this then you may find it impossible
@@ -300,7 +301,7 @@ Nous obtenons une interface graphique agréable, où les clics de la souris perm
 
 \subsection[Vers les algorithmes classiques...]{Vers les algorithmes classiques... : Utilisation de \textsf{ant} et premiers essais}
 
-Nous avons dans un premier temps construit un fichier \textsf{buid.xml} capable de compiler, nettoyer, lancer le programme en adjoignant les bonnes ressources via une simple commande.\\ Après avoir ensuite saisi la syntaxe nécessaire d'abord à Scala puis à CSO, les programmes 'producteur-consommateur' et 'lecteur-écrivain'étaient l'un des objectifs de notre projet.\\
+Nous avons dans un premier temps construit un fichier \textsf{build.xml} capable de compiler, nettoyer, lancer le programme en adjoignant les bonnes ressources via une simple commande.\\ Après avoir ensuite saisi la syntaxe nécessaire d'abord à Scala puis à CSO, les programmes 'producteur-consommateur' et 'lecteur-écrivain' étaient l'un des objectifs de notre projet.\\
 
 Cependant, après des résultats infructueux, il semblerait que notre équipe ait mis à jour un problème relevant du comportement de CSO vis-à-vis des processus concurrents. En effet, leur ordre d'arrivée dépend de leur position dans la sélective; ce qui ne devrait pas être le cas.\\ 
 
@@ -308,7 +309,7 @@ En d'autres termes, les processus ne s'executent que si l'un d'entre eux se fini
 
 \subsubsection{Illustration du problème}
 
-Pour illustrer ces propos, considérons le programme suivant \textsf{HelloWorld} qui lancent plusieurs procesus en parallèle, chacun ayant soit la tâche d'afficher \og Hello \fg soit d'afficher \og World \fg.\\
+Pour illustrer ces propos, considérons le programme suivant \textsf{HelloWorld} qui lance plusieurs procesus en parallèle, chacun ayant soit la tâche d'afficher \og Hello \fg soit d'afficher \og World \fg.\\
 La syntaxe-clef ici est la double-barre ||, qui permet de décrire une sélective, mais donne aussi la possiblité via l'opérateur \textsf{for} de lancer \textit{n} processus en parallèle.\\
 Cette syntaxe est notamment décrite dans le rapport émis par Dr.\ \textsc{Sufrin}\footnote{Page personnelle de Bernard \textsc{Sufrin} à l'adresse \url{http://users.comlab.ox.ac.uk/bernard.sufrin/}} \cite{cpa2008-cso}, ainsi que dans le programme Lyfe qu'il met à disposition sur son site internet.
 \medskip
@@ -464,11 +465,11 @@ Les résultats obtenus avec cette syntaxe sont présentés dans la figure~\vref{
 \label{fig:1HW}
 \end{figure}
 
-On remarque bien que les processus dépendent de leur place dans la sélective, et leur ordre est même (sauf exceptions) quasiment le même.
+On remarque bien que les processus dépendent de leur place dans la sélective, et leur ordre est, sauf exceptions, quasiment le même.
 
 \subsubsection{Pour aller plus loin}
 
-Ce problème peut certes paraître minime. L'essentiel est bien sûr que l'ensemble des processus se comporte comme s'il tournait en parallèle.\\ Ici tout porte à croire que c'est cependant le cas. Mais un autre exemple démontre la séquencialité de l'exécution (\emph{cf.} l'encadré suivant)
+Ce problème peut certes paraître minime. L'essentiel est bien sûr que l'ensemble des processus se comporte comme s'ils tournaient en parallèle.\\ Ici tout porte à croire que c'est cependant le cas. Mais un autre exemple démontre la séquencialité de l'exécution (\emph{cf.} l'encadré suivant)
 
 \begin{lstlisting}[frame=trBL, title={Contre-exemple démontrant la séquentialité de l'exécution}]
 package gazel_schiano_cso
@@ -568,7 +569,7 @@ Ce qui donne ici à l'execution l'encadré \vref{fig:contreexemple-resultat}, qu
 \label{fig:contreexemple-resultat}
 \end{figure}
 
-\paragraph{Constats} L'encha\^inement de l'instanciation se fait de manière séquentielle; d'abord en commençant par les porducteurs, puis par le consommateur.
+\paragraph{Constats} L'encha\^inement de l'instanciation se fait de manière séquentielle; d'abord en commençant par les producteurs, puis par le consommateur.
 
 \paragraph{Que se passe-t-il ?} Il est clair que l'instanciation se fait de manière séquentielle, et que le Buffer \textit{mon} n'exite pas encore. De ce fait, l'essai de l'envoi via le pipe vers \textit{mon} ne peut pas aboutir, et on aboutir à un interblocage...
 
@@ -659,21 +660,21 @@ pipe:
 
 \textbf{Constats} L'envoi d'un message par le \textsf{Sender} se traduit par une immédiate impression du message par le \textsf{Receiver}. Le programme tourne comme prévu.
 
-\paragraph{Remarque} Nous pouvons introduire ici la notion de rendez-vous avec la classe Receiver; en effet, il est possible de sustituer aux deux lignes contenues dans le \textsf{repeat\{\}} la ligne suivante
+\paragraph{Remarque} Nous pouvons introduire ici la notion de rendez-vous avec la classe Receiver; en effet, il est possible de substituer aux deux lignes contenues dans le \textsf{repeat\{\}} la ligne suivante
 \begin{center}
 \begin{verbatim}
 in ? { message => { println("<<Reception : " + message) }  }
 \end{verbatim}
 \end{center}
-où la récpetion d'un message dans le pipe exécutera la fonction contenue entre crochets
+où la réception d'un message dans le pipe exécutera la fonction contenue entre crochets
 
 
-\paragraph{Que s'est-il passé ?} L'astuce se situe dans le \textsf{main}. Le fait d'avoir des classes nous permet une instanciation préléminaire sans lancer l'objet.\\
+\paragraph{Que s'est-il passé ?} L'astuce se situe dans le \textsf{main}. Le fait d'avoir des classes nous permet une instanciation préliminaire sans lancer l'objet.\\
 La sélective lançant le processus semble alors bien s'exécuter en parallèle.\\
 
 \subsection{Un dernier effort}
 Certes le programme précédent nous donne un résultat satisfaisant; mais il reste le problème du nombre. En effet, nous n'avons considérés ici qu'un couple de sender-receiver, relié par un seul pipe.\\
-Nous avons ommis de parler en outre des différents pipes mis à disposition par le langage CSO, et de leur utilisation dans les multiples situations.
+Nous avons omis de parler en outre des différents pipes mis à disposition par le langage CSO, et de leur utilisation dans les multiples situations.
 
 \subsubsection{Les différents pipes}
 Nous pouvons lire dans le rapport du Docteur~\textsc{Sufrin} \cite{cpa2008-cso}, page 4 :
@@ -689,7 +690,7 @@ Nous pouvons lire dans le rapport du Docteur~\textsc{Sufrin} \cite{cpa2008-cso},
 \subsection{Producteur-Consommateur}
 
 L'objet de cette sous-section est de présenter l'implémentation de l'algorithme classique de producteur-consommateur en CSO.\\
-Pour la communication des différents processus, nous utiliserons deux de canaux (\textsf{val left,right = ManyMany[String]}) qui permettront de faire le lien entre les producteurs et le buffer d'une part, puis le buffer et les consommateurs d'autre part.
+Pour la communication des différents processus, nous utiliserons deux canaux (\textsf{val left,right = ManyMany[String]}) qui permettront de faire le lien entre les producteurs et le buffer d'une part, puis le buffer et les consommateurs d'autre part.
 
 \begin{lstlisting}[frame=trBL,title={Producteurs-Consommateurs avec un buffer : En-tête}]
 package gazel_schiano_cso
@@ -776,7 +777,7 @@ object ProdCons {
     }
 \end{lstlisting} 
 
-L'implémentation de cet algorithme est réalisé d'une manière assez simple, avec seulement un pipe vers le buffer qui redirige vers n'importe quel consommateur.\\
+L'implémentation de cet algorithme est réalisée d'une manière assez simple, avec seulement un pipe vers le buffer qui redirige vers n'importe quel consommateur.\\
 Le résultat obtenu est conforme à celui attendu :
 
 \begin{lstlisting}[frame=trBL,title={Producteurs-Consommateurs : Résultat de l'éxécution}, firstnumber=last]   
@@ -815,6 +816,135 @@ Le résultat obtenu est conforme à celui attendu :
      [exec] <<Consommation 0 : Objet numero 3
 \end{lstlisting} 
 
+\subsection{Lecteur-\'Ecrivain}
+
+Cet algorithme repose sur le partage d'une ressource commune.\\
+Son implémentation a été dure; nous présentons ici une version fonctionnelle qui donne le résultat attendu :
+
+\begin{lstlisting}[frame=trBL, title="Lecteur-\'Ecrivain"]
+package gazel_schiano_cso
+import ox.CSO._
+
+object LectEcri {
+    var NL = 4
+    var NE = 2
+    var ressource = 0;
+    
+    val pipeEcriAcces, pipeEcriLibere ,pipeLectAcces, pipeLectLibere = ManyMany[String]
+    
+    def main( args: Array[String] ) {
+        
+        println("Debut du programme Lecteur-Ecrivain (" + NL + "," + NE + ").")
+        
+        // Instanciation
+        val lecteurs =  for (i <- 0 until NL) yield new Lecteur(i, pipeLectAcces,pipeLectLibere)
+        val ecrivains = for (i <- 0 until NE) yield new Ecrivain(i, pipeEcriAcces, pipeEcriLibere)
+        val controleur = new Controleur(pipeEcriAcces, pipeEcriLibere ,pipeLectAcces, pipeLectLibere )
+        
+        // Lancement en parallele des processus
+        ( 
+           || ( for (i <- 0 until NL) yield lecteurs(i).process )
+        || 
+           || ( for (i <- 0 until NE) yield ecrivains(i).process )
+        || 
+           controleur.process 
+        )()
+    }
+\end{lstlisting}
+
+On notera que l'on a utilisé quatre canaux de transmission, deux à deux regroupés pour la demande d'accès et de libération des lecteurs (\emph{resp.} des écrivains).\\
+
+En outre, les lecteurs et écrivains sont classiques, et prennent en entrée les deux canaux leur étant assignés.\\
+
+\begin{lstlisting}[frame=trBL, title="Lecteur-\'Ecrivain : Lecteur", firstnumber=last]
+	class Lecteur(i: Int, outA: ![String],outL: ![String]) {
+        def process : PROC = {
+            println("Creation du lecteur (" + i + ").")
+            repeat 
+            {
+                sleep(500)
+                println("Demande de lecture " + i + " ...")
+                outA ! "."
+                println("ressource : " + ressource + " [lecteur " +  i + "]")
+                outL ! "."
+            }
+        }
+    }
+\end{lstlisting}
+
+\begin{lstlisting}[frame=trBL, title="Lecteur-\'Ecrivain : \'Ecrivain", firstnumber=last]
+	class Ecrivain(i: Int, outA: ![String],outL: ![String]) {
+        def process : PROC = {
+            println("Creation de l'ecrivain (" + i + ").")
+            var message =""
+            repeat
+            {
+                sleep(500)
+                println("Demande d'ecriture " + i + " ...")
+                outA ! "."
+                ressource = ressource +1
+                println("ressource : " + ressource + " [ecrivain " +  i + "]")
+                outL ! "."
+             }
+        }
+    }  
+\end{lstlisting}
+
+Enfin le contrôleur :
+
+\begin{lstlisting}[frame=trBL, title="Lecteur-\'Ecrivain : \'Ecrivain", firstnumber=last]
+    class Controleur( inLectAcces: ?[String], inLectLibere: ?[String], inEcriAcces: ?[String], inEcriLibere: ?[String]) {
+        def process : PROC = {
+            println("Debut du controleur")
+            (
+                proc{ repeat{ val v=inLectAcces ?; NL = NL + 1; println("Nombre de lecteurs : " + NL + "\n") } }
+            ||
+                proc{ repeat{ val v=inLectLibere ?; NL = NL - 1 } }
+            ||
+                proc{ repeat{ val v=inLectAcces ?; var e=inLectLibere ? } }     
+            )()
+        }
+    }
+\end{lstlisting}
+
+Et nous donne le résultat suivant :
+
+\begin{lstlisting}[frame=trBL, title="Lecteur-\'Ecrivain : Résultats"]
+exe:
+     [exec] Debut du programme Lecteur-Ecrivain (4,2).
+     [exec] Creation du lecteur (0).
+     [exec] Creation du lecteur (1).
+     [exec] Creation du lecteur (2).
+     [exec] Creation du lecteur (3).
+     [exec] Creation de l'ecrivain (0).
+     [exec] Creation de l'ecrivain (1).
+     [exec] Debut du controleur
+     [exec] Demande de lecture 3 ...
+     [exec] Demande d'ecriture 1 ...
+     [exec] Demande de lecture 2 ...
+     [exec] Demande d'ecriture 0 ...
+     [exec] Demande de lecture 0 ...
+     [exec] ressource : 1 [ecrivain 1]
+     [exec] Demande de lecture 1 ...
+     [exec] Nombre de lecteurs : 4
+     [exec] 
+     [exec] ressource : 2 [ecrivain 0]
+     [exec] Demande d'ecriture 1 ...
+     [exec] Nombre de lecteurs : 4
+     [exec] 
+     [exec] Demande d'ecriture 0 ...
+     [exec] ressource : 3 [ecrivain 1]
+     [exec] Nombre de lecteurs : 4
+     [exec] 
+     [exec] ressource : 4 [ecrivain 0]
+     [exec] Demande d'ecriture 1 ...
+     [exec] Demande d'ecriture 0 ...
+     [exec] Nombre de lecteurs : 4
+     [exec] 
+     [exec] ressource : 5 [ecrivain 1]
+     [exec] Nombre de lecteurs : 5
+\end{lstlisting}
+
 \chapter[JCSP]{Java Communicating Sequential Processes -- JCSP}
 \begin{quotation}
 \textit{\og Although CSP is a mathematical system, JCSP does not require in-depth mathematical skill, allowing instead that programmers can achieve well-behaved software just by following simple rules.\fg}
@@ -827,9 +957,9 @@ Le résultat obtenu est conforme à celui attendu :
 
 \lettrine{L}{e langage} JCSP est une implémentation de CSP pour le langage de programmation Java. Il fait partie des solutions les plus populaires du fait de sa simplicité et de la communauté active de développement et de forums. Développé à l'université de Kent par Peter Welch et Paul Austin, il dispose de plus d'une documentation détaillée.\\
 
-Nous allons montrer dans un permier temps quelques ont les possibilités offertes par ce langage, puis nous présenteron le résultat d'implémentation des problèmes classiques de producteur-consommateur et du dîner des philosophes.\\
+Nous allons montrer dans un permier temps quelles sont les possibilités offertes par ce langage, puis nous présenterons le résultat d'implémentation des problèmes classiques de producteur-consommateur et du dîner des philosophes.\\
 
-Puisque nous nous sommes penchés dans un premier temps, nous pouvons le dire sans trop d'hésitation, l'utilisation de JCSP paraît fort aisée à côté de celle de CSO. Nous pouvions pensé que cela était peut-être dû à notre meilleure connaissance de Java que de CSO, mais après plusieurs heures d'utilisation, nous pouvons dire que JCSP possède quelques atouts que ne possède pas CSO. Nous reviendrons sur ce point lors de la comparaison des deux solutions.
+Puisque nous nous sommes penchés dans un premier temps sur CSO, l'utilisation de JCSP paraît fort aisée en comparaison. Nous pouvions penser que cela était peut-être dû à notre meilleure connaissance de Java que de Scala, mais après plusieurs heures d'utilisation, nous pouvons dire que JCSP possède quelques atouts que ne possède pas CSO. Nous reviendrons sur ce point lors de la comparaison des deux solutions.
 Ils possèdent toutefois plusieurs points communs, notamment la gestion des canaux qui est identique à celle vue précedemment (voir la partie Les différents pipes de CSO).
 Contrairement à CSO, nous n'avons rencontré peu de problèmes. Ceux que nous avons rencontré ont pu être rapidement résolus, grâce notamment à une communauté active d'utilisateurs de JCSP. Il reprend tous les avantages de CSP d'une part et ceux de Java d'autre part. Nous allons à présent voir sa structure au travers de deux exemples : le problème Producteur/Consommateur et celui du dîner des philosophes.
 
