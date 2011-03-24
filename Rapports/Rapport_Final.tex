@@ -91,7 +91,7 @@
 \makeatother
 
 
-  \title{Programmation Concurrentielle}
+  \title{Programmation Concurrente}
   \subtitle{Communicating Scala Objects\\Java Communicating Sequential Processes}
   \location{Nantes}
   \lhead{\itshape PAPPLE - 2011}
@@ -264,7 +264,7 @@ Nous obtenons une interface graphique agréable, où les clics de la souris perm
 
 \subsection[Vers les algorithmes classiques...]{Vers les algorithmes classiques... : Utilisation de \textsf{ant} et premiers essais}
 
-Après avoir construit un fichier \textsf{buid.xml} capable de compiler, nettoyer, lancer le programme en adjoignant les bonnes ressources via une simple commande, puis avoir saisi la syntaxe nécessaire d'abord à Scala, puis à CSO, les programmes 'producteur-consommateur' et 'lecteur-écrivain'étaient l'un des objectifs de notre projet.\\
+Nous avons dans un premier temps construit un fichier \textsf{buid.xml} capable de compiler, nettoyer, lancer le programme en adjoignant les bonnes ressources via une simple commande.\\ Après avoir ensuite saisi la syntaxe nécessaire d'abord à Scala puis à CSO, les programmes 'producteur-consommateur' et 'lecteur-écrivain'étaient l'un des objectifs de notre projet.\\
 
 Cependant, après des résultats infructueux, il semblerait que notre équipe ait mis à jour un problème relevant du comportement de CSO vis-à-vis des processus concurrents. En effet, leur ordre d'arrivée dépend de leur position dans la sélective; ce qui ne devrait pas être le cas.\\ 
 
@@ -787,13 +787,11 @@ Le résultat obtenu est conforme à celui attendu :
 \end{flushright}
 \end{quotation}
 
-
-\lettrine{L}{e langage}JCSP est une implémentation de CSP pour le langage de programmation JAVA. Il fait partie des solutions les plus populaires du fait de sa simplicité et de la communauté active de développement et de forums. Développé à l'université de Kent par Peter Welch et Paul Austin, il dispose de plus d'une documentation détaillée.\\
-
-Nous allons montrer quelques possibilités offertes par ce langage puis le résultat d'implémentation des problèmes classiques de producteur/consommateur et du dîner des philosophes.\\
-
-
 \section{Utilisation de JCSP}
+
+\lettrine{L}{e langage} JCSP est une implémentation de CSP pour le langage de programmation Java. Il fait partie des solutions les plus populaires du fait de sa simplicité et de la communauté active de développement et de forums. Développé à l'université de Kent par Peter Welch et Paul Austin, il dispose de plus d'une documentation détaillée.\\
+
+Nous allons montrer dans un permier temps quelques ont les possibilités offertes par ce langage, puis nous présenteron le résultat d'implémentation des problèmes classiques de producteur-consommateur et du dîner des philosophes.\\
 
 Puisque nous nous sommes penchés dans un premier temps, nous pouvons le dire sans trop d'hésitation, l'utilisation de JCSP paraît fort aisée à côté de celle de CSO. Nous pouvions pensé que cela était peut-être dû à notre meilleure connaissance de Java que de CSO, mais après plusieurs heures d'utilisation, nous pouvons dire que JCSP possède quelques atouts que ne possède pas CSO. Nous reviendrons sur ce point lors de la comparaison des deux solutions.
 Ils possèdent toutefois plusieurs points communs, notamment la gestion des canaux qui est identique à celle vue précedemment (voir la partie Les différents pipes de CSO).
