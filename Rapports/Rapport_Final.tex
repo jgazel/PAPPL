@@ -245,12 +245,46 @@ Le jeu de la vie, automate cellulaire imaginé par John Horton Conway en 1970, e
 \emph{Lyfe} se déroule sur une grille à deux dimensions en $10\times 10$ ou $15\times 15$, dont les cases -- qu’on appelle des \og cellules \fg, par analogie avec les cellules vivantes -- peuvent prendre deux états distincts : \emph{vivantes} ou \emph{mortes}.\\
 
 Notre précédent script a télécharger directement le jeu \emph{Lyfe} dans le répertoire courant, sous le nom de \textbf{CSwing}.\\
-Pour l'exécuter, il suffit maintenant d'effectuer les deux commandes :
 
-\begin{verbatim}
-ant jar
-ant lyfe
-\end{verbatim}
+\subsubsection{Compilation}
+\label{subsubsec:cswing}
+\begin{enumerate}
+\item Placez-vous dans le répertoire CSwing
+  \begin{verbatim} 
+  $ cd CSwing
+  \end{verbatim}
+\item  Celui-ci contient les instructions de compilation dans \textsf{build.xml}
+  \begin{verbatim} 
+  $ ant jar
+  \end{verbatim}
+La compilation doit aboutir par la création d'un fichier BUILD contenu dans CSwing.
+\end{enumerate}
+
+\subsubsection{Lancement}
+
+\begin{enumerate}
+\item Restez dans le répertoire CSwing
+\item Le \textsf{build.xml} propose plusieurs méthodes: 
+\begin{itemize}
+\item Lancement du jeu en $10 \times 10$
+  \begin{verbatim} 
+  $ ant lyfe
+  \end{verbatim}
+\item Lancement du jeu en $15 \times 15$
+  \begin{verbatim} 
+  $ ant lyfe
+  \end{verbatim}
+\item Lancement de test sur le programme
+  \begin{verbatim} 
+  $ ant cswingtest
+  \end{verbatim}
+  \begin{verbatim} 
+  ou
+  $ ant trivtest
+  \end{verbatim}
+\end{itemize}
+La compilation doit aboutir par la création d'un fichier BUILD contenu dans CSwing.
+\end{enumerate}
 
 Nous obtenons une interface graphique agréable, où les clics de la souris permet de changer l'état d'une cellule (\emph{cf.} Figure~\vref{fig:lyfe}). L'initialisation de logiciel se fait avec une première configuration des cellules (\emph{cf.}~\vref{fig:lyfe-a}); un premier clic sur une cellule lancera le programme (\emph{cf.}~\vref{fig:lyfe-b}).
 
@@ -273,7 +307,7 @@ En d'autres termes, les processus ne s'executent que si l'un d'entre eux se fini
 
 \subsubsection{Illustration du problème}
 
-Pour illustrer ces propos, considérons le programme suivant \textsf{HelloWorld} qui lancent plusieurs procesus en parallèle, chacun ayant soit la tâche d'afficher "Hello" soit d'afficher "World".\\
+Pour illustrer ces propos, considérons le programme suivant \textsf{HelloWorld} qui lancent plusieurs procesus en parallèle, chacun ayant soit la tâche d'afficher \og Hello \fg soit d'afficher \og World \fg.\\
 La syntaxe-clef ici est la double-barre ||, qui permet de décrire une sélective, mais donne aussi la possiblité via l'opérateur \textsf{for} de lancer \textit{n} processus en parallèle.\\
 Cette syntaxe est notamment décrite dans le rapport émis par Dr.\ \textsc{Sufrin}\footnote{Page personnelle de Bernard \textsc{Sufrin} à l'adresse \url{http://users.comlab.ox.ac.uk/bernard.sufrin/}} \cite{cpa2008-cso}, ainsi que dans le programme Lyfe qu'il met à disposition sur son site internet.
 \medskip
@@ -1131,7 +1165,7 @@ class Philosopher implements CSProcess {
 \part{Comparaison de CSO et JCSP}
 \chapter{Une préférence pour JCSP}
 
-\lettrine{\`A}{près plusieurs} semaines sur les deux langages, il appara\^it que CSO est bien plus compliqué que JCSP; d'une part par la prise en main du langage de programmation Scala, d'autre part à cause de sa syntaxe particulière pour les \emph{channels synchrones}.\\
+\lettrine{\`A}{près plusieurs} semaines passées sur les deux langages, il appara\^it que CSO est bien plus compliqué que JCSP; d'une part par la prise en main du langage de programmation Scala que par sa syntaxe particulière pour les \emph{channels synchrones}.\\
 
 \section{Avantages et Inconvénients}
 Nous allons exposer à présent les avantages et inconvénient des deux solutions.
@@ -1172,13 +1206,18 @@ JCSP appara\^it comme une solution bien plus efficace, \textit{pour le moment} ,
 
 \chapter{Conclusion}
 
-\lettrine{C}{e projet} d'application nous a permis de prendre en main différentes technologies que nous n'avions pas obligatoirement vues en cours : CSO, Scala, JCSP. De plus, nous avons pu mettre en pratique, les différents éléments vus en cours de Parallélisme et Systèmes Répartis et de les approfondir. En bilan, nous avons étudié les différents mécanismes en jeu pour la programmation concurrente pour les langages Scala et Java. Nous avons programmé les principaux problèmes classiques dans ces bibliotèques. De surcroît, nous fournissons des tutoriels permettant de faciliter leur utilisation. L'objectif étant de les utiliser pour les promotions suivantes à la manière de CTJ actuellement.
+
+\lettrine{C}{e projet} d'application nous a permis de prendre en main différentes technologies que nous n'avions pas obligatoirement vues en cours : CSO, Scala, JCSP. De plus, nous avons pu mettre en pratique, les différents éléments vus en cours de Parallélisme et Systèmes Répartis et de les approfondir.\\
+En bilan, nous avons étudié les différents mécanismes en jeu pour la programmation concurrente pour les langages Scala et Java. Nous avons programmé les principaux problèmes classiques dans ces bibliotèques. De surcroît, nous fournissons des tutoriels permettant de faciliter leur utilisation. L'objectif étant de les utiliser pour les promotions suivantes à la manière de CTJ actuellement.\\
+
 Afin d'améliorer la compréhension des langages concurrents, nous proposons diverses solutions :
+
 \begin{itemize}
-\item étudier en cours, même de façon succinte Scala, alternative de plus en plus crédible de Java
-\item poursuivre l'étude de la programmation concurrente mais il nous semble encore précoce de traiter de CSO en cours de PASYR
-\item éventuellement proposer un sujet de veille technologique concernant les solutions existantes de programmation concurrente
+\item étudier en cours, même de façon succinte Scala, alternative de plus en plus crédible de Java,
+\item poursuivre l'étude de la programmation concurrente mais il nous semble encore précoce de traiter de CSO en cours de PASYR,
+\item éventuellement proposer un sujet de veille technologique concernant les solutions existantes de programmation concurrente.
 \end{itemize}
+
 
 \part{Annexes}
 \appendix
@@ -1285,7 +1324,83 @@ Une notation simplifiée est :
 in ? { message => { println( message + "recu.") }  }
 \end{verbatim}             
 
+\item[Installation] Nous avons réalisé un script \textsf{install-cso.sh} qui permet lors de son execution d'installer la version 2.8.1 de Scala (script), et de télécharger la version de CSwing proposé par Dr.\ \textsc{Sufrin}. Pour lancer l'installation :
+\begin{verbatim}
+# Installation de Java et ant (optionnel si déjà présent)
+sudo aptitude install openjdk-6-jdk
+sudo aptitude install ant
+# Lancement du script
+bash install_cso.sh
+\end{verbatim}
 \end{description}
+
+
+\section{Description du script install\_{}cso.sh}
+Le script install\_{}cso.sh automatise l'installation de CSO et du programme \emph{lyfe}, vous pouvez cependant uivre les instructions ci-dessous pour effectuer une \og installation à la main\fg.
+
+\begin{enumerate}
+%\item 
+%  \begin{verbatim} 
+%  $ sudo aptitude install scala
+%  \end{verbatim}
+\item Créer un répertoire dans lequel vous travaillerez : 
+  \begin{verbatim} 
+  $ mkdir projet-cso
+  \end{verbatim}
+\item Télécharger les fichiers requis (adapter la version si nécessaire)
+  \begin{verbatim} 
+  $ cd projet-cso
+  $ wget http://www.scala-lang.org/downloads/distrib/
+  files/scala-2.8.1.final.tgz
+  $ wget http://users.comlab.ox.ac.uk/bernard.sufrin/
+  CSO/cso-sources-scala2.8.0.tgz
+  \end{verbatim}
+  
+\item Décompresser les archives scala-2.8.1.final.tgz et cso-sources-scala2.8.0.tgz
+  \begin{verbatim} 
+  $ tar -xvf scala-2.8.1.final.tgz
+  $ tar -xvf cso-sources-scala2.8.0.tgz
+  $ rm cso-sources-scala2.8.0.tgz
+  $ rm scala-2.8.1.final.tgz
+  $ mv scala-2.8.1.final Scala
+  \end{verbatim}
+  
+\item Exporter le path de la dernière version de Scala (à mettre dans le bashrc pour un effet permanent; attention à ne pas oublier à faire un \textsf{source $\sim$/.bashrc} si vous ne changez pas de terminal après modification de votre \textsf{bashrc}) 
+  \begin{verbatim}   
+  export SCALA_HOME="/opt/scala" 
+  export PATH="${SCALA_HOME}/bin:${JAVA_HOME}/bin:${PATH}"
+  \end{verbatim}
+
+\item Créer un répertoire ScalaLocal et déplacez-y le xml suivant
+  \begin{verbatim} 
+  $ mkdir ScalaLocal
+  $ mv scalatasks.xml ScalaLocal/
+  \end{verbatim}
+
+\item Deux options s'offrent à vous. Soit il s'agira de modifier le build.xml dans chaque projet; soit vous pouvez créer des liens symboliques à la racine:
+\begin{itemize}
+\item Modifier le build pour la compilation
+  \begin{verbatim} 
+  $ gedit build.xml
+  \end{verbatim}
+  Et modifier les lignes 11 et 12 par les \$\{user.home\}/  par  \$\{user.home\}/projet-cso/; en prenant en compte le chemin d'accès dans lequel vous avez créé votre fichier.
+\item Créer deux liens symboliques à la racine vers le fichier projet-cso [à adapter selon l'emplacement de celui-ci]:
+  \begin{verbatim} 
+  $ cd
+  $ ln -s projet-cso/Scala Scala
+  $ ln -s projet-cso/ScalaLocal ScalaLocal
+  \end{verbatim}
+\end{itemize}
+
+  
+\item Compiler via la commande
+  \begin{verbatim} 
+  $ ant jar
+  \end{verbatim}  
+\end{enumerate}
+
+Pour lancer le programme \emph{lyfe}, reportez-vous à la sous-section \vref{install\_{}cso.sh}.
+
 
 
 \chapter[Tutoriel JCSP]{Tutoriel -- JCSP}
