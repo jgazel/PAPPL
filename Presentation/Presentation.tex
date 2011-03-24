@@ -1,0 +1,218 @@
+\documentclass[slidetop,11pt]{beamer}
+%
+% Ces deux lignes à décommenter pour sortir 
+% le texte en classe article
+% \documentclass[class=article,11pt,a4paper]{beamer}
+% \usepackage{beamerbasearticle}
+
+% Packages pour les français
+%
+\usepackage[T1]{fontenc} 
+\usepackage[utf8]{inputenc}
+\usepackage[frenchb]{babel}
+% pour un pdf lisible  l'cran si on ne dispose pas 
+% des fontes cmsuper ou lmodern
+\usepackage{lmodern}
+%\usepackage{aeguill}
+
+% Pour afficher le pdf en plein ecran
+% (comment pour imprimer les transparents et pour les tests)
+%\hypersetup{pdfpagemode=FullScreen}
+
+\usepackage{listings}   % need for code encapsulation
+
+\lstset{
+	language=Python,
+	numbers=left, numberstyle=\tiny, stepnumber=1, numbersep=7pt,
+	morekeywords={%
+    %%% BOUCLE, TEST & Co.
+      if, elif, then, else, and, or, until, yield,repeat,
+    %%% IMPORT & Co.
+      import, from, package,
+    %%% FONCTIONS NUMERIQUES
+      cos, sin, tan, acos, asin, atan,
+    %%% CONSTANTES
+      pi, True, False,
+    %%% Types .
+      Int, String, Array, Integer, 
+    %%% Mots-Clefs supp.
+      object, class, protected, public, private, final, val, var, new, ?, !
+    },
+    sensitive=true,
+    morecomment=[l]{\#},
+	keywordstyle=\bfseries\emph,
+	breaklines=true,	
+	frameround=fttt,
+	basicstyle= \mdseries\scriptsize }
+%\lstset{language=bash,basicstyle=\scriptsize,commentstyle=\small\itshape,stringstyle=\ttfamily,numbers=left,numberstyle=\tiny,stepnumber=1,showstringspaces=false}
+	
+
+% ------------------------------------------------
+%-----------   styles pour beamer   --------------
+% ------------------------------------------------
+%
+% ------------- Choix des couleurs ---------------
+%\xdefinecolor{fondtitre}{rgb}{0.20,0.43,0.09}  % vert fonce
+% la mme d'une autre manire
+\definecolor{fondtitre}{HTML}{336E17}
+
+%\xdefinecolor{coultitre}{rgb}{0.41,0.05,0.05}  % marron
+% la mme d'une autre manire
+\definecolor{coultitre}{RGB}{105,13,13}
+
+\xdefinecolor{fondtexte}{rgb}{1,0.95,0.86}     % ivoire
+
+% Redfinit la couleur de fond pour imprimer sur transparents
+%\xdefinecolor{fondtexte}{rgb}{1,1,1}     % blanc
+
+% commande differente pour les couleurs nommes - de base
+%\colorlet{coultexte}{black} 
+
+% -------------- Fioritures de style -------------
+% Fait afficher l'ensemble du frame 
+% en peu lisible (gris clair) ds l'ouverture
+\beamertemplatetransparentcovered
+
+% Supprimer les icones de navigation (pour les transparents)
+%\setbeamertemplate{navigation symbols}{}
+
+% Mettre les icones de navigation en mode vertical (pour projection)
+%\setbeamertemplate{navigation symbols}[vertical]
+
+% ------------ Choix des thmes ------------------
+%\usecolortheme{crane}
+%\usetheme{darmstadt}
+%\usetheme{frankfurt}
+%\useoutertheme{default}
+%\useinnertheme{default}
+%\useinnertheme[shadow=true]{rounded}
+\mode<presentation>
+\useoutertheme{tree}
+\usecolortheme{whale}
+\usecolortheme{orchid}
+\useinnertheme[shadow=true]{rounded}
+
+\setbeamerfont{block title}{size={}}
+
+% Dfinition de boites en couleur spcifiques
+% premire mthode
+\setbeamercolor{bas}{fg=coultitre, bg=fondtitre!40}
+\setbeamercolor{haut}{fg=fondtitre!40, bg=coultitre}
+% deuxime mthode
+\beamerboxesdeclarecolorscheme{clair}{fondtitre!70}{coultitre!20}
+\beamerboxesdeclarecolorscheme{compar}{coultitre!70}{fondtitre!20}
+
+% insrer le nombre de pages
+%\logo{\insertframenumber/\inserttotalframenumber}
+
+%------------ fin style beamer -------------------
+
+% Faire apparatre un sommaire avant chaque section
+% \AtBeginSection[]{
+%   \begin{frame}
+%   \frametitle{Plan}
+%   \medskip
+%   %%% affiche en dbut de chaque section, les noms de sections et
+%   %%% noms de sous-sections de la section en cours.
+%   \small \tableofcontents[currentsection, hideothersubsections]
+%   \end{frame} 
+% }
+
+% ----------- Contenu de la page de titre --------
+\title{Programmation Concurrente}
+\subtitle{Communicating Scala Objects\\Java Communicating Sequential Processes}
+%\subtitle{Fichier test}
+\author{Jérôme \textsc{Gazel} \\ Clément \textsc{Schiano de Colella}}
+\institute{\'Ecole Centrale de Nantes}
+\date{\oldstylenums{vendredi 25 mars 2011}}
+\logo{\includegraphics[height=1cm]{Logo_ECN.png}}
+% ------------------------------------------------
+% -------------   Début document   ---------------
+% ------------------------------------------------
+\begin{document}
+%--------- Ecriture de la page de titre ----------
+% avec la commande frame simplifie
+\frame{\titlepage}
+%
+\part{Projet d'Application} 
+%------------------- Sommaire ----------------
+\begin{frame}{Sommaire}
+  \small \tableofcontents[hideallsubsections]
+\end{frame} 
+
+
+% ---------------------------------------------
+% ------------ INTRODUCTION-------------
+% ---------------------------------------------
+\section{Introduction}
+% Sommaire local. En deux colonnes
+\begin{frame}{Plan}
+  \tableofcontents[sections=\thesection]
+\end{frame}
+% ---------------------------------------------
+\subsection{Programmation concurrente}
+% avec l'environnement frame
+\begin{frame}[label=pagesimple]
+  \frametitle{Programmation concurrente}
+    \begin{itemize}[<+->]
+  \item Qu'est-ce que la programmation concurrente?
+  \item Quelles sont ces intérêts?
+   \item Quels sont les outils disponibles?
+    \end{itemize}
+\end{frame}
+
+\begin{frame} 
+  \frametitle{Présentation de CSP}
+  Article célèbre de Hoare
+  CSP est un langage :
+\begin{itemize}[<+->]
+\item impératif
+\item parallèle
+\item communications par échanges synchrones de message
+ \end{itemize}
+\end{frame}
+
+\begin{frame} [containsverbatim]
+\framesubtitle{Notion de rendez-vous}
+Exemple d'échange de message :
+\begin{lstlisting}[frame=trBL]
+P:: Q ! M(x)
+Q:: P ? M(y)
+\end{lstlisting}
+\end{frame}
+
+
+\section{Notre grande enquête}
+\begin{frame}{Plan}
+  \tableofcontents[sections=\thesection]
+\end{frame}
+
+\begin{frame} 
+  \frametitle{Conseils à suivre}
+  \framesubtitle{Des gestes quotidiens}
+  \begin{block}{Nos conseils}
+     \begin{itemize}[<+->]
+       \item Même en veille, un appareil électrique consomme de l'énergie.
+       \item Préférez un ordinateur portable à un ordinateur de Bureau.
+       \item Éteignez votre modem / box Internet la nuit.
+     \end{itemize}
+  \end{block}   
+\end{frame}
+
+
+
+\section{Bibliographie}
+
+\begin{frame} 
+\frametitle{Bibliographie}
+
+\begin{thebibliography}{Cpa2008}
+\bibitem[Pasyr]{pasyr} {\textit{Cours de Parallélisme et Systèmes Répartis}, Olivier Roux, \'Ecole Centrale de Nantes, 2011}
+
+\bibitem[Cpa2008]{cpa2008-cso} {\textit{Communicating Process Architectures 2008}, Susan Stepney, Fiona Polack, Alistair McEwan, Peter Welch, and Wilson Ifill (Eds.), IOS Press, 2008
+\copyright 2008 The authors and IOS Press. All rights reserved.\\
+\url{http://citeseerx.ist.psu.edu/viewdoc/download?doi=10.1.1.164.8856&rep=rep1&type=pdf}}
+\end{thebibliography}
+\end{frame}
+
+\end{document}
