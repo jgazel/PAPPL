@@ -13,6 +13,7 @@
  \hypersetup{colorlinks=true,linkcolor=blue,urlcolor=red}
  \usepackage{varioref}
  \usepackage{lettrine}
+ \usepackage{multirow}
 %\usepackage[letterpaper]{geometry}
 %\geometry{verbose,tmargin=3cm,bmargin=3cm,lmargin=3cm}
 %\usepackage{varioref}
@@ -95,7 +96,7 @@
   \title{Programmation Concurrente}
   \subtitle{Communicating Scala Objects\\Java Communicating Sequential Processes}
   \location{Nantes}
-  \lhead{\itshape PAPPLE - 2011}
+  \lhead{\itshape PAPPL - 2011}
   \supervisor{M.\ Olivier \textsc{Roux}}
   \follower{\'Ecole Centrale de Nantes}
 
@@ -1170,7 +1171,8 @@ class Philosopher implements CSProcess {
 \section{Avantages et Inconvénients}
 Nous allons exposer à présent les avantages et inconvénient des deux solutions.
 
-\subsection{Avantages de CSO}
+\subsection{CSO}
+\subsubsection{Avantages}
 Les avantages de CSO sont en fait confondus avec les avantages de Scala. En effet, nous sommes arrivés à penser que CSO en lui m\^eme n'est pas une meilleure ou une moins bonne solution que JCSP. Il relève surtout du langage qu'il utilise. On peut donc globalement dire que :
 \begin{itemize}
 \item CSO est moins verbeux que JCSP. Les programmes sont donc souvent plus courts ...
@@ -1179,7 +1181,7 @@ Les avantages de CSO sont en fait confondus avec les avantages de Scala. En effe
 \item enfin l'argument majeur est les possibilités offertes par la programmation fonctionelle
 \end{itemize}
 
-\subsection{Inconvénients de CSO}
+\subsubsection{Inconvénients}
 Malheureusement, ils nous semblent conséquents:
  \begin{itemize}
 \item une documentation restreinte
@@ -1189,7 +1191,8 @@ Malheureusement, ils nous semblent conséquents:
 
 Nous sommes néanmoins optimistes.  Scala est un langage jeune qui gagne de plus en plus en popularité. Nous pensons que de ce fait, le CSO est moins traité car le Scala n'est pas encore parfaitement implanté dans les langages de programmation majeurs. Du fait, de l'utilisation de la JVM ainsi que de sa concision face à Java. Cette situation devrait donc être amenée à évoluer rapidement.
 
-\subsection{Avantages de JCSP}
+\subsection{JCSP}
+\subsubsection{Avantages}
 Le JCSP possède de solides avantages. 
 \begin{itemize}
 \item une simplicité d'usage m\^eme pour ceux ne disposant pas de connaissances particulières dans les langages de programmation concurrente.
@@ -1198,14 +1201,38 @@ Le JCSP possède de solides avantages.
 \item de nombreux forums permettant l'entraide et la résolution de problèmes
 \end{itemize}
 
-\subsection{Inconvénients de JCSP}
+\subsubsection{Inconvénients}
 Au contraire, JCSP nous appara\^it comme une solution très intéressante et m\^ure pour la programmation concurrente. Si nous devions absolument émettre une restriction, elle serait s\^urement sur le caractère trop restreint de son utilisation et sur l'incertitude concernant sa pérennité.
 
 \section{Notre avis}
 JCSP appara\^it comme une solution bien plus efficace, \textit{pour le moment} , que CSO. Plus facile de prise en main, mieux documenté et avec une communauté active de développeurs, CSO para\^it encore trop jeune en comparaison. Dans une visée purement pédagogique, JCSP nous semble plus pertinent. 
 
-\chapter{Conclusion}
+\section{Performance comparée entre CSO et JCSP}
+Nous avons manqué de temps pour nous pencher en détail sur les questions de différence de performance entre CSO et JCSP.\\
+Cependant, Dr.\ \textsc{Sufrin} nous propose une comparaison poussée de ces deux langauges sur plusieurs machines (\emph{cf.} page 16, \cite{cpa2008-cso}). Voici ses résultats présentés en Figure~\vref{fig:tab}
+\begin{figure}
+\centering
+\begin{tabular}{|cc||c|c|c|c|}
+\hline \multirow{2}{1cm}{Host} & \multirow{2}{1cm}{JVM} & CSO & JCSP & CSO & JCSP \\ 
+  &   & Seq & Seq & Par & Par \\ 
+\hline\hline $4 \times 2.66$GHz Xeon, OS/X $10.4$ 
+ & 1.5 & 31-34 & 44-45 & 59-66 & 54-56 \\ 
+\hline $2 \times 2.4$GHz Athlon $64X2$ Linux 
+ & 1.6 & 26-39 & 32-41 & 24-46 & 27-46 \\ 
+\hline $1 \times 1.83$GHz Core Duo, OS/X 
+ & 1.5 & 64-66 & 66-69 & 90-94 & 80-89 \\ 
+\hline $1 \times 1.4$GHz Centrino, Linux 
+ & 1.6 & 30-31 & 28-32 & 49-58 & 36-40 \\ 
+\hline 
+\end{tabular}
+\caption{Performances comparées entre CSO et JCSP}
+\label{fig:tab} 
+\end{figure}
 
+D'après Dr.\ \textsc{Sufrin}, les performnaces de communication de CSO sont suffisamment proches de celles de JCSP pour qu'elles n'influent pas sur les résultats présentés.\\
+D'autres part, le démarrage général de processus pour CSO est meilleur que celui de JCSP. Cela peut effectivement refleter le fait que la structure parallèle de JCSP met en cache les threads dès leur première exécution, tandis que son analogue CSO ne le fait pas.
+
+\chapter{Conclusion}
 
 \lettrine{C}{e projet} d'application nous a permis de prendre en main différentes technologies que nous n'avions pas obligatoirement vues en cours : CSO, Scala, JCSP. De plus, nous avons pu mettre en pratique, les différents éléments vus en cours de Parallélisme et Systèmes Répartis et de les approfondir.\\
 En bilan, nous avons étudié les différents mécanismes en jeu pour la programmation concurrente pour les langages Scala et Java. Nous avons programmé les principaux problèmes classiques dans ces bibliotèques. De surcroît, nous fournissons des tutoriels permettant de faciliter leur utilisation. L'objectif étant de les utiliser pour les promotions suivantes à la manière de CTJ actuellement.\\
@@ -1405,7 +1432,7 @@ Pour lancer le programme \emph{lyfe}, reportez-vous à la sous-section \vref{sub
 
 \chapter[Tutoriel JCSP]{Tutoriel -- JCSP}
 
-Voici un tutoriel concernant l'utilisation de JCSP. Tout d'abord, le lecteur doit installer JCSP. Pour cela, il a à disposition le script bash $install_jcsp.sh$. Pour l'exécuter, il suffit de taper dans un terminal :
+Voici un tutoriel concernant l'utilisation de JCSP. Tout d'abord, le lecteur doit installer JCSP. Pour cela, il a à disposition le script bash $install\_{}jcsp.sh$. Pour l'exécuter, il suffit de taper dans un terminal :
 
 \begin{lstlisting}[frame=trBL]
 bash install_jcsp.sh
