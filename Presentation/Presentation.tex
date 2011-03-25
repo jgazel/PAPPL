@@ -157,6 +157,8 @@
     \item Quels sont les outils disponibles?
   \end{itemize}
   \end{block}
+  \bigskip
+  \uncover<4->{$\rightarrow$ Présentaton de CSP}
 \end{frame}
 
 \subsection{Présentation de CSP}
@@ -230,7 +232,7 @@ x:=1;
 \end{quotation}   
 \end{frame}
 
-\subsection{Installation de Scala et CSO}
+\subsubsection{Installation de Scala et CSO}
 \begin{frame} 
 \frametitle{Installation de Scala et CSO}
 Très peu de documentation disponible
@@ -244,20 +246,42 @@ to accomplish any of the subsequent tasks.\fg}
 \end{quotation}
 \end{frame}
 
+\subsubsection{Exemples}
 \begin{frame} 
 \frametitle{Lyfe}
 Exemple d'execution
 \end{frame}
 
-\begin{frame} 
+\begin{frame}[containsverbatim]
 \frametitle{Premiers essais en CSO...}
+\begin{lstlisting}
+import ox.CSO._
 
+object Hello_Par {
+
+    val NP = 3
+    val NC = 4
+    
+    def main( args: Array[String] ) {
+  
+        println("Debut du programme HelloWord Par :")
+        ( 
+           || ( for (i <- 0 until NP) yield proc { println("Hello" + i) } )
+        || 
+           || ( for (i <- 0 until NC) yield proc { println("World" + i) } )
+        )()
+        
+    }
+\end{lstlisting}
 \end{frame}
 
+\subsubsection{Premiers problèmes...}
 \begin{frame} 
-\frametitle{...et premiers problèmes}
-
+\frametitle{Premiers problèmes...}
+Les processus dépendent de leur place dans la sélective, et leur
+ordre est, sauf exceptions, quasiment le même.
 \end{frame}
+
 
 \begin{frame} 
 \frametitle{Les différents pipes}
@@ -271,9 +295,152 @@ Exemple d'execution
 \end{block}
 \end{frame}
 
+\subsubsection{Algorithmes classiques}
 \begin{frame} 
 \frametitle{Algorithmes classiques}
+\begin{block}{Programmation concurrente}
+\begin{itemize}[<+->]
+\item Producteurs-Consommateurs
+\item Lecteur-Ecrivain
+\item D\^iner des philosophes
+\end{itemize}
+\end{block}
+\end{frame}
 
+\begin{frame} [containsverbatim]
+\begin{lstlisting}[frame=trBL]
+[exec] Debut du programme Producteur-Consommateur
+[exec] Creation d un producteur (0)
+[exec]    Boucle Producteur -- Objet numero 0
+[exec] Objet numero 0
+[exec] Production 0 : Objet numero 0
+[exec] Creation d un producteur (1)
+[exec]    Boucle Producteur -- Objet numero 0
+[exec] Objet numero 0
+[exec] Production 1 : Objet numero 0
+[exec] Creation d un producteur (2)
+[exec]    Boucle Producteur -- Objet numero 0
+[exec] Objet numero 0
+[exec] Production 2 : Objet numero 0
+[exec] Creation d un producteur (3)
+[exec]    Boucle Producteur -- Objet numero 0
+[exec] Objet numero 0
+[exec] Production 3 : Objet numero 0
+[exec] Creation d un consommateur (0) :: enVie? true
+[exec]    Boucle Consommateur
+\end{lstlisting}
+\end{frame}
+
+\subsubsection{... et encore des problèmes}
+\begin{frame} 
+\frametitle{... et encore des problèmes}
+\begin{center}
+Apparition d'interblocages...
+\end{center}
+\end{frame}
+
+\begin{frame} [containsverbatim]
+\frametitle{vers le Producteur-Consommateur}
+\begin{lstlisting}[frame=trBL]
+Buildfile: /home/jerome/Documents/Pappl/git/CSO/HelloWorld/build.xml
+
+pipe:
+     [exec] Debut du programme Hello_Pipe
+     [exec] Creation d un sender
+     [exec] Creation d un receiver
+     [exec] Envoi de "Mon Objet"... >>
+     [exec] <<Mon Objet recu
+     [exec] Envoi de "Mon Objet"... >>
+     [exec] <<Mon Objet recu
+     [exec] Envoi de "Mon Objet"... >>
+     [exec] <<Mon Objet recu
+     [exec] Envoi de "Mon Objet"... >>
+     [exec] <<Mon Objet recu
+\end{lstlisting}
+\end{frame}
+
+
+\begin{frame} [containsverbatim]
+\begin{lstlisting}[frame=trBL,title={Producteurs-Consommateurs : Résultat de l'éxécution}, firstnumber=last]   
+     [exec] Debut du programme Producteur-Consommateur (4,1)...
+     [exec] Production 3 : Objet numero 0...>>
+     [exec] <<Consommation 0 : Objet numero 0
+     [exec] <<Consommation 0 : Objet numero 0
+     [exec] <<Consommation 0 : Objet numero 0
+     [exec] Production 0 : Objet numero 0...>>
+     [exec] <<Consommation 0 : Objet numero 0
+     [exec] Production 1 : Objet numero 0...>>
+     [exec] Production 2 : Objet numero 0...>>
+     [exec] Production 3 : Objet numero 1...>>
+     [exec] <<Consommation 0 : Objet numero 1
+     [exec] Production 0 : Objet numero 1...>>
+     [exec] Production 1 : Objet numero 1...>>
+     [exec] <<Consommation 0 : Objet numero 1
+     [exec] <<Consommation 0 : Objet numero 1
+     [exec] Production 2 : Objet numero 1...>>
+     [exec] <<Consommation 0 : Objet numero 1
+     [exec] <<Consommation 0 : Objet numero 2
+\end{lstlisting} 
+\end{frame}
+
+\begin{frame} [containsverbatim]
+\frametitle{Lecteur-Ecrivain}
+\begin{lstlisting}[frame=trBL]
+import ox.CSO._
+
+object LectEcri {
+    var NL = 4
+    var NE = 2
+    var ressource = 0;
+    
+    val pipeEcriAcces, pipeEcriLibere ,pipeLectAcces, pipeLectLibere = ManyMany[String]
+    
+    def main( args: Array[String] ) {
+        
+        // Instanciation
+        val lecteurs =  for (i <- 0 until NL) yield new Lecteur(i, pipeLectAcces,pipeLectLibere)
+        val ecrivains = for (i <- 0 until NE) yield new Ecrivain(i, pipeEcriAcces, pipeEcriLibere)
+        val controleur = new Controleur(pipeEcriAcces, pipeEcriLibere ,pipeLectAcces, pipeLectLibere )
+\end{lstlisting}
+\end{frame}     
+
+\begin{frame} [containsverbatim]
+\frametitle{Lecteur-Ecrivain}
+\begin{lstlisting}[frame=trBL]   
+        // Lancement en parallele des processus
+        ( 
+           || ( for (i <- 0 until NL) yield lecteurs(i).process )
+        || 
+           || ( for (i <- 0 until NE) yield ecrivains(i).process )
+        || 
+           controleur.process 
+        )()
+    }
+\end{lstlisting}
+\end{frame}
+
+\begin{frame} [containsverbatim]
+\frametitle{Lecteur-Ecrivain : Résultats}
+\begin{lstlisting}[frame=trBL]   
+exe:
+     [exec] Debut du programme Lecteur-Ecrivain (4,2)...
+     [exec] Demande de lecture 3 ...
+     [exec] Demande d ecriture 1 ...
+     [exec] Demande de lecture 2 ...
+     [exec] Demande d ecriture 0 ...
+     [exec] Demande de lecture 0 ...
+     [exec] ressource : 1 [ecrivain 1]
+     [exec] Demande de lecture 1 ...
+     [exec] Nombre de lecteurs : 4
+     [exec] 
+     [exec] ressource : 2 [ecrivain 0]
+     [exec] Demande d ecriture 1 ...
+     [exec] Nombre de lecteurs : 4
+     [exec] 
+     [exec] Demande d ecriture 0 ...
+     [exec] ressource : 3 [ecrivain 1]
+     [exec] Nombre de lecteurs : 4
+\end{lstlisting}
 \end{frame}
 
 \subsection{Java Communicating Sequential Processes – JCSP}
@@ -287,13 +454,13 @@ Exemple d'execution
 \end{quotation}
 \end{frame}
 
-\subsection{Exemples fournis avec JCSP}
+\subsubsection{Exemples fournis avec JCSP}
 \begin{frame}
 \frametitle{Exemples fournis avec JCSP}
 Exemple d'execution
 \end{frame}
 
-\subsection{Producteur/Consommateur}
+\subsubsection{Producteur/Consommateur}
 \begin{frame}[containsverbatim]
 \framesubtitle{Producteur/Consommateur}
 \begin{lstlisting}[frame=trBL,title={Producteurs-Consommateurs: Producteur.java}]
@@ -362,7 +529,7 @@ public class Main
 \end{lstlisting}
 \end{frame}
 
-\subsection{D\^iner des philosophes}
+\subsubsection{D\^iner des philosophes}
 \begin{frame}
 Exemple d'execution
 \end{frame}
@@ -413,12 +580,20 @@ Exemple d'execution
 \section{Conclusion}
 \begin{frame}
 \frametitle{Conclusion}
+\begin{block}{sur le projet}
 \begin{itemize}[<+->]
 \item \'Etudier en cours, même de façon succinte Scala, alternative de plus en plus crédible de Java,
 \item Poursuivre l'étude de la programmation concurrente mais il nous semble encore précoce de traiter de CSO en cours de PASYR,
 \item \'Eventuellement proposer un sujet de veille technologique concernant les solutions existantes de programmation concurrente.
 \end{itemize}
+\end{block}
+\begin{block}{Apports personnels}
+\begin{itemize}[<+->]
+\item Applications des connaissances
+\item Travail collaboratif
+\end{itemize
 \end{frame}
+
 
 \section*{Bibliographie}
 
