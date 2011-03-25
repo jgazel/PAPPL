@@ -134,7 +134,7 @@
 % avec la commande frame simplifie
 \frame{\titlepage}
 %
-\part{Projet d'Application} 
+\part{Projet d'Application : Programmation concurrente} 
 %------------------- Sommaire ----------------
 \begin{frame}{Sommaire}
   \small \tableofcontents[hideallsubsections]
@@ -145,25 +145,24 @@
 % ------------ INTRODUCTION-------------
 % ---------------------------------------------
 \section{Introduction}
-% Sommaire local. En deux colonnes
-\begin{frame}{Plan}
-  \tableofcontents[sections=\thesection]
-\end{frame}
-% ---------------------------------------------
-\section{Programmation concurrente}
+\subsection{Programmation concurrente}
 % avec l'environnement frame
 \begin{frame}[label=pagesimple]
-  \frametitle{Programmation concurrente}
-    \begin{itemize}[<+->]
-  \item Qu'est-ce que la programmation concurrente?
-  \item Quelles sont ces intérêts?
-   \item Quels sont les outils disponibles?
-    \end{itemize}
+  \frametitle{Introduction}
+  \framesubtitle{Programmation concurrente}
+  \begin{block}{Avant-propos}
+  \begin{itemize}[<+->]
+    \item Qu'est-ce que la programmation concurrente?
+    \item Quelles sont ces intérêts?
+    \item Quels sont les outils disponibles?
+  \end{itemize}
+  \end{block}
 \end{frame}
 
 \subsection{Présentation de CSP}
 \begin{frame} 
-  \frametitle{Présentation de CSP}
+  \frametitle{Introduction}
+  \framesubtitle{Présentation de CSP}
   1978 $\rightarrow$ Article célèbre de Hoare\\ 
   \pause
   \begin{block}{CSP}
@@ -214,6 +213,11 @@ x:=1;
 \end{frame}
 
 \section{Implémentation des différents langages}
+% Sommaire local. En deux colonnes
+\begin{frame}{Plan}
+  \tableofcontents[sections=\thesection]
+\end{frame}
+
 \subsection{Communicating Scala Objects – CSO}
 \begin{frame} 
   \frametitle{Implémentation des différents langages}
